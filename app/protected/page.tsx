@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 import { createServerSupabaseClient } from "@/lib/supabase/server"
-import { getServerProfile } from "@/lib/auth"
+import { getServerProfile } from "@/lib/auth-server"
 
 export default async function ProtectedPage() {
   const supabase = await createServerSupabaseClient()

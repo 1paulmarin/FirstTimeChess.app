@@ -1,5 +1,4 @@
 import { createSupabaseClient } from "@/lib/supabase/client"
-import { createServerSupabaseClient } from "@/lib/supabase/server"
 
 export interface Profile {
   id: string
@@ -61,20 +60,6 @@ export async function getCurrentUser() {
   const profile = await getProfile(user.id)
 
   return profile
-}
-
-// Server-side profile operations
-export async function getServerProfile(userId: string): Promise<Profile | null> {
-  const supabase = await createServerSupabaseClient()
-
-  const { data, error } = await supabase.from("profiles").select("*").eq("id", userId).single()
-
-  if (error) {
-    console.error("Error fetching server profile:", error)
-    return null
-  }
-
-  return data
 }
 
 export async function signOut() {
