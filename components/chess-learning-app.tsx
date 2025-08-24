@@ -512,7 +512,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
     return inCheck
   }, [board])
 
-  const getGameStatusTranslated = (
+  const getGameStatusTranslated = useCallback((
     board: Square[][],
     currentPlayer: PieceColor,
     lastMove?: { from: [number, number]; to: [number, number]; piece: Square },
@@ -534,7 +534,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
     }
 
     return currentPlayer === "white" ? t.whiteToMove : t.blackToMove
-  }
+  }, [language])
 
   const gameStatus = useMemo(
     () => getGameStatusTranslated(board, currentPlayer, lastMove, pieceMoved),
