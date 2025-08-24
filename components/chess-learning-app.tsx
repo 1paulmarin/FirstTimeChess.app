@@ -837,10 +837,10 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
                 {room && <p className="text-sm text-amber-700">{room.name}</p>}
               </div>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <div className="flex items-center gap-2">
                 <Select value={language} onValueChange={(value: Language) => setLanguage(value)}>
-                  <SelectTrigger className="w-32">
+                  <SelectTrigger className="w-24 sm:w-32">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -852,14 +852,14 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
               <Button
                 variant="outline"
                 onClick={onLeaveRoom}
-                className="border-amber-800 text-amber-800 hover:bg-amber-100"
+                className="border-amber-800 text-amber-800 hover:bg-amber-100 text-sm sm:text-base px-2 sm:px-4"
               >
                 ← Back to Lobby
               </Button>
               <Button
                 variant="ghost"
                 onClick={onLogout}
-                className="text-amber-800 hover:text-amber-900 hover:bg-amber-100"
+                className="text-amber-800 hover:text-amber-900 hover:bg-amber-100 text-sm sm:text-base px-2 sm:px-4"
               >
                 Logout
               </Button>
@@ -870,6 +870,17 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
 
       <div className="p-4">
         <div className="max-w-7xl mx-auto">
+          {/* Mobile Back to Lobby Button - Always Visible */}
+          <div className="mb-4 flex justify-center lg:hidden">
+            <Button
+              variant="outline"
+              onClick={onLeaveRoom}
+              className="border-amber-800 text-amber-800 hover:bg-amber-100 px-6 py-2"
+            >
+              ← Back to Lobby
+            </Button>
+          </div>
+          
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-1">
               <Card className="mb-4">
