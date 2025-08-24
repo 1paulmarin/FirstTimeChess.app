@@ -265,10 +265,10 @@ export default function RoomManager({ user, onJoinRoom, onLogout, onUpdateUser }
                 Profile
               </Button>
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
                 onClick={onLogout}
-                className="flex items-center gap-2 text-amber-800 hover:text-amber-900 hover:bg-amber-100"
+                className="border-amber-800 text-amber-800 hover:bg-amber-100"
                 disabled={loading}
               >
                 <LogOut className="w-4 h-4" />

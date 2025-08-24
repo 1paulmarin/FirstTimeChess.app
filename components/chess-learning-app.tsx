@@ -485,7 +485,7 @@ const TRANSLATIONS = {
 
 type Language = keyof typeof TRANSLATIONS
 
-export default function ChessLearningApp() {
+export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: { user: any; room: any; onLeaveRoom: () => void; onLogout: () => void }) {
   const [board, setBoard] = useState<Square[][]>(createInitialBoard)
   const [selectedSquare, setSelectedSquare] = useState<[number, number] | null>(null)
   const [selectedPieceType, setSelectedPieceType] = useState<Square | null>(null)
@@ -682,20 +682,21 @@ export default function ChessLearningApp() {
 
       setLastClickTime(currentTime)
       setLastClickSquare([row, col])
-    },
-    [
-      board,
-      selectedSquare,
-      validMoves,
-      currentPlayer,
-      lastMove,
-      selectedPieceType,
-      lastClickTime,
-      lastClickSquare,
-      pieceMoved,
-      isDemoMode,
-    ],
-  )
+    }
+  },
+  [
+    board,
+    selectedSquare,
+    validMoves,
+    currentPlayer,
+    lastMove,
+    selectedPieceType,
+    lastClickTime,
+    lastClickSquare,
+    pieceMoved,
+    isDemoMode,
+  ],
+)
 
   const handlePromotion = (pieceType: PieceType) => {
     if (!promotionDialog) return
@@ -823,33 +824,62 @@ export default function ChessLearningApp() {
   }
 
   return (
-    <div className="min-h-screen bg-orange-100 p-4">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-6">
-          <img src="/images/first-time-chess-logo-new.png" alt="First Time Chess" className="h-16 mx-auto mb-4" />
-          <div className="mb-4">
-            <Select value={language} onValueChange={(value: Language) => setLanguage(value)}>
-              <SelectTrigger className="w-32 mx-auto">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="en">English</SelectItem>
-                <SelectItem value="ro">Română</SelectItem>
-              </SelectContent>
-            </Select>
+    <div className="min-h-screen bg-orange-100">
+      {/* Header with Navigation */}
+      <div className="bg-amber-50 border-b-2 border-amber-800 p-4 shadow-lg">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <img src="/images/first-time-chess-logo-new.png" alt="First Time Chess" className="h-12 w-auto" />
+              <div className="h-8 w-px bg-amber-800"></div>
+              <div>
+                <h1 className="text-xl font-bold text-amber-900">Chess Game</h1>
+                {room && <p className="text-sm text-amber-700">{room.name}</p>}
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <Select value={language} onValueChange={(value: Language) => setLanguage(value)}>
+                  <SelectTrigger className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="en">English</SelectItem>
+                    <SelectItem value="ro">Română</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button
+                variant="outline"
+                onClick={onLeaveRoom}
+                className="border-amber-800 text-amber-800 hover:bg-amber-100"
+              >
+                ← Back to Lobby
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={onLogout}
+                className="text-amber-800 hover:text-amber-900 hover:bg-amber-100"
+              >
+                Logout
+              </Button>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1">
-            <Card className="mb-4">
-              <CardHeader>
-                <CardTitle>{TRANSLATIONS[language].gameStatus}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-lg font-semibold">{gameStatus}</p>
-              </CardContent>
-            </Card>
+      <div className="p-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-1">
+              <Card className="mb-4">
+                <CardHeader>
+                  <CardTitle>{TRANSLATIONS[language].gameStatus}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-lg font-semibold">{gameStatus}</p>
+                </CardContent>
+              </Card>
 
             <Card className="mb-4">
               <CardHeader>

@@ -5,9 +5,24 @@ import { GeistMono } from "geist/font/mono"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "First Time Chess - Learning Studio",
-  description: "Interactive chess learning platform for teachers and students",
-  generator: "v0.app",
+  title: "First Time Chess - Learn Chess Online",
+  description: "A beginner-friendly chess learning platform with interactive lessons and multiplayer games",
+  icons: {
+    icon: [
+      {
+        url: "/images/first-time-chess-logo-new.png",
+        type: "image/png",
+        sizes: "32x32",
+      },
+      {
+        url: "/images/first-time-chess-logo-new.png",
+        type: "image/png",
+        sizes: "16x16",
+      },
+    ],
+    shortcut: "/images/first-time-chess-logo-new.png",
+    apple: "/images/first-time-chess-logo-new.png",
+  },
 }
 
 export default function RootLayout({
@@ -26,7 +41,7 @@ html {
 }
         `}</style>
       </head>
-      <body>{children}</body>
+      <body className={GeistSans.className}>{children}</body>
     </html>
   )
 }
