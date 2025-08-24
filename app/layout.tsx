@@ -19,10 +19,16 @@ export const metadata: Metadata = {
         type: "image/png",
         sizes: "16x16",
       },
+      {
+        url: "/images/first-time-chess-logo-new.png",
+        type: "image/png",
+        sizes: "48x48",
+      },
     ],
     shortcut: "/images/first-time-chess-logo-new.png",
     apple: "/images/first-time-chess-logo-new.png",
   },
+  manifest: "/manifest.json",
 }
 
 export default function RootLayout({

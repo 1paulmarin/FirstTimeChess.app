@@ -1,0 +1,21 @@
+{
+  "name": "First Time Chess",
+  "short_name": "First Time Chess",
+  "description": "A beginner-friendly chess learning platform with interactive lessons and multiplayer games",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fef3c7",
+  "theme_color": "#92400e",
+  "icons": [
+    {
+      "src": "/images/first-time-chess-logo-new.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/first-time-chess-logo-new.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
