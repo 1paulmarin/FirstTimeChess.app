@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import ChessLearningApp from "@/components/chess-learning-app"
+import LessonRoom from "@/components/lesson-room"
 import RoomManager from "@/components/room-manager"
 import UserProfile from "@/components/user-profile"
 
@@ -22,6 +23,7 @@ export interface GameRoom {
   maxParticipants?: number
   selectedPlayerId?: string | null
   participants: User[]
+  isLessonMode?: boolean
 }
 
 export default function Home() {
@@ -89,6 +91,15 @@ export default function Home() {
     return (
       <main className="min-h-screen bg-orange-100">
         <RoomManager user={user} onJoinRoom={handleJoinRoom} onLogout={handleLogout} />
+      </main>
+    )
+  }
+
+  // Check if this is a lesson room
+  if (currentRoom.isLessonMode) {
+    return (
+      <main className="min-h-screen bg-orange-100">
+        <LessonRoom room={currentRoom} user={user} onLeaveRoom={handleLeaveRoom} onLogout={handleLogout} />
       </main>
     )
   }
