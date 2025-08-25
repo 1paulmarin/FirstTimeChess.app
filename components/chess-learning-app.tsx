@@ -732,10 +732,10 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
             setLastClickTime(currentTime)
             setLastClickSquare([row, col])
             return
+          } else {
+            setSelectedSquare(null)
+            setValidMoves([])
           }
-        } else {
-          setSelectedSquare(null)
-          setValidMoves([])
         }
       }
 
