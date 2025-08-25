@@ -10,6 +10,10 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
+        url: "/favicon.svg",
+        type: "image/svg+xml",
+      },
+      {
         url: "/images/first-time-chess-logo-new.png",
         type: "image/png",
         sizes: "32x32",
@@ -25,7 +29,7 @@ export const metadata: Metadata = {
         sizes: "48x48",
       },
     ],
-    shortcut: "/images/first-time-chess-logo-new.png",
+    shortcut: "/favicon.svg",
     apple: "/images/first-time-chess-logo-new.png",
   },
   manifest: "/manifest.json",

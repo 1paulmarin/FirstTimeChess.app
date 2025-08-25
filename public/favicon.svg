@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Chess board background -->
+  <rect width="32" height="32" fill="#f0d9b5"/>
+  <rect x="0" y="0" width="16" height="16" fill="#b58863"/>
+  <rect x="16" y="16" width="16" height="16" fill="#b58863"/>
+  
+  <!-- Chess pieces (simplified) -->
+  <!-- King -->
+  <circle cx="8" cy="8" r="3" fill="#000"/>
+  <rect x="7" y="11" width="2" height="3" fill="#000"/>
+  
+  <!-- Queen -->
+  <circle cx="24" cy="8" r="2.5" fill="#fff" stroke="#000" stroke-width="0.5"/>
+  <rect x="23.5" y="10.5" width="1" height="2.5" fill="#fff" stroke="#000" stroke-width="0.5"/>
+  
+  <!-- Pawn -->
+  <circle cx="8" cy="24" r="2" fill="#000"/>
+  <rect x="7.5" y="26" width="1" height="2" fill="#000"/>
+  
+  <!-- Rook -->
+  <rect x="22" y="22" width="4" height="4" fill="#fff" stroke="#000" stroke-width="0.5"/>
+  <rect x="23" y="26" width="2" height="2" fill="#fff" stroke="#000" stroke-width="0.5"/>
+</svg>
