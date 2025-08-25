@@ -500,7 +500,7 @@ const TRANSLATIONS = {
 type Language = keyof typeof TRANSLATIONS
 
 export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: { user: any; room: any; onLeaveRoom: () => void; onLogout: () => void }) {
-  // FORCE VERCEL DEPLOYMENT: Clean build with no middleware conflicts - commit 011d8ee
+  // FORCE VERCEL DEPLOYMENT: Optimized board sizing for perfect mobile and desktop experience - commit a90b8df
   // All TypeScript errors fixed, strict checking enabled, no routing issues
   const [board, setBoard] = useState<Square[][]>(createInitialBoard)
   const [selectedSquare, setSelectedSquare] = useState<[number, number] | null>(null)
@@ -874,7 +874,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
         <div key={`${row}-${col}`} className={squareClass} onClick={() => handleSquareClick(row, col)}>
           {piece && (
             <span
-              className={`text-[min(7vw,1.8rem)] sm:text-[min(5.5vw,2.2rem)] md:text-[min(4.5vw,2.8rem)] lg:text-[min(3.5vw,3.2rem)] xl:text-[min(3vw,3.5rem)] select-none font-bold ${
+              className={`text-[min(6.5vw,1.6rem)] sm:text-[min(5vw,2rem)] md:text-[min(4vw,2.5rem)] lg:text-[min(3vw,2.8rem)] xl:text-[min(2.5vw,3rem)] select-none font-bold ${
                 piece.color === "white"
                   ? "text-white drop-shadow-[0_0_2px_rgba(0,0,0,1)]"
                   : "text-black drop-shadow-[0_0_2px_rgba(255,255,255,0.8)]"
@@ -1127,7 +1127,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
               </div>
             </div>
 
-            <div className="w-full max-w-[85vw] sm:max-w-[65vw] md:max-w-[55vw] lg:max-w-[45vw] xl:max-w-[40vw] aspect-square mx-auto border-2 sm:border-4 border-gray-800 bg-gray-900 p-1 sm:p-2 md:p-3 rounded-lg shadow-2xl overflow-hidden">
+            <div className="w-full max-w-[75vw] sm:max-w-[60vw] md:max-w-[50vw] lg:max-w-[40vw] xl:max-w-[35vw] aspect-square mx-auto border-2 sm:border-4 border-gray-800 bg-gray-900 p-1 sm:p-2 md:p-3 rounded-lg shadow-2xl overflow-hidden">
               <div className="w-full h-full grid grid-cols-8 grid-rows-8">{renderBoard()}</div>
             </div>
 
