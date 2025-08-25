@@ -512,33 +512,22 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
     return inCheck
   }, [board])
 
-  const getGameStatusTranslated = useCallback((
-    board: Square[][],
-    currentPlayer: PieceColor,
-    lastMove?: { from: [number, number]; to: [number, number]; piece: Square },
-    pieceMoved?: Set<string>, // Added for castling tracking
-  ): string => {
-    const t = TRANSLATIONS[language]
-
-    if (isCheckmate(board, currentPlayer, lastMove, pieceMoved)) {
-      const winner = currentPlayer === "white" ? "Black" : "White"
-      return winner === "Black" ? t.blackWonByCheckmate : t.whiteWonByCheckmate
-    }
-
-    if (isStalemate(board, currentPlayer, lastMove, pieceMoved)) {
-      return t.drawByStalemate
-    }
-
-    if (isInCheck(board, currentPlayer)) {
-      return currentPlayer === "white" ? t.whiteKingInCheck : t.blackKingInCheck
-    }
-
-    return currentPlayer === "white" ? t.whiteToMove : t.blackToMove
-  }, [language])
-
   const gameStatus = useMemo(
-    () => getGameStatusTranslated(board, currentPlayer, lastMove, pieceMoved),
-    [getGameStatusTranslated, board, currentPlayer, lastMove, pieceMoved],
+    () => {
+      const status = getGameStatus(board, currentPlayer, lastMove || undefined, pieceMoved)
+      const t = TRANSLATIONS[language]
+      
+      if (status.includes("White won by checkmate")) return t.whiteWonByCheckmate
+      if (status.includes("Black won by checkmate")) return t.blackWonByCheckmate
+      if (status.includes("Draw by stalemate")) return t.drawByStalemate
+      if (status.includes("White king is in check")) return t.whiteKingInCheck
+      if (status.includes("Black king is in check")) return t.blackKingInCheck
+      if (status.includes("White to move")) return t.whiteToMove
+      if (status.includes("Black to move")) return t.blackToMove
+      
+      return status
+    },
+    [board, currentPlayer, lastMove, pieceMoved, language],
   )
 
   const handleSquareClick = useCallback(
