@@ -463,6 +463,7 @@ const TRANSLATIONS = {
     blackTime: "Black Time",
     startGame: "Start Game",
     pauseGame: "Pause Game",
+    resumeGame: "Resume Game",
     resetTimer: "Reset Timer",
   },
   ro: {
@@ -491,6 +492,7 @@ const TRANSLATIONS = {
     blackTime: "Timp Negru",
     startGame: "Începe Jocul",
     pauseGame: "Pune Pauză",
+    resumeGame: "Continuă Jocul",
     resetTimer: "Resetează Cronometrul",
   },
 }
@@ -521,6 +523,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
   const [whiteTime, setWhiteTime] = useState<number>(timeControl * 60) // seconds
   const [blackTime, setBlackTime] = useState<number>(timeControl * 60) // seconds
   const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false)
+  const [isTimerPaused, setIsTimerPaused] = useState<boolean>(false)
   const [gameStartTime, setGameStartTime] = useState<number | null>(null)
   const [hasGameStarted, setHasGameStarted] = useState<boolean>(false)
 
@@ -538,7 +541,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null
     
-    if (isTimerRunning && !isDemoMode && hasGameStarted) {
+    if (isTimerRunning && !isTimerPaused && !isDemoMode && hasGameStarted) {
       interval = setInterval(() => {
         if (currentPlayer === "white") {
           setWhiteTime(prev => {
@@ -557,7 +560,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
     return () => {
       if (interval) clearInterval(interval)
     }
-  }, [isTimerRunning, isDemoMode, currentPlayer, hasGameStarted])
+  }, [isTimerRunning, isTimerPaused, isDemoMode, currentPlayer, hasGameStarted])
 
   // Check for time out
   useEffect(() => {
@@ -579,15 +582,21 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
 
   const startTimer = () => {
     setIsTimerRunning(true)
+    setIsTimerPaused(false)
     setGameStartTime(Date.now())
   }
 
   const pauseTimer = () => {
-    setIsTimerRunning(false)
+    setIsTimerPaused(true)
+  }
+
+  const resumeTimer = () => {
+    setIsTimerPaused(false)
   }
 
   const resetTimer = () => {
     setIsTimerRunning(false)
+    setIsTimerPaused(false)
     setWhiteTime(timeControl * 60)
     setBlackTime(timeControl * 60)
     setGameStartTime(null)
@@ -818,6 +827,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
     setIsDemoMode(false)
     // Reset timer state
     setIsTimerRunning(false)
+    setIsTimerPaused(false)
     setWhiteTime(timeControl * 60)
     setBlackTime(timeControl * 60)
     setGameStartTime(null)
@@ -1091,9 +1101,13 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
                 </div>
                 
                 <div className="flex gap-2">
-                  {!isTimerRunning ? (
+                  {!hasGameStarted ? (
                     <Button onClick={startTimer} size="sm" className="bg-green-600 hover:bg-green-700">
                       {TRANSLATIONS[language].startGame}
+                    </Button>
+                  ) : isTimerPaused ? (
+                    <Button onClick={resumeTimer} size="sm" className="bg-green-600 hover:bg-green-700">
+                      {TRANSLATIONS[language].resumeGame}
                     </Button>
                   ) : (
                     <Button onClick={pauseTimer} size="sm" className="bg-yellow-600 hover:bg-yellow-700">
