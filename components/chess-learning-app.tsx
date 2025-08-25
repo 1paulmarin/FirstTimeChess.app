@@ -762,6 +762,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
     lastClickSquare,
     pieceMoved,
     isDemoMode,
+    currentPlayer,
   ],
 )
 
