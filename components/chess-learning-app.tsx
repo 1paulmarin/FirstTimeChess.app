@@ -522,6 +522,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
   const [blackTime, setBlackTime] = useState<number>(timeControl * 60) // seconds
   const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false)
   const [gameStartTime, setGameStartTime] = useState<number | null>(null)
+  const [hasGameStarted, setHasGameStarted] = useState<boolean>(false)
 
   const whiteKingInCheck = useMemo(() => {
     const inCheck = isInCheck(board, "white")
@@ -537,7 +538,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null
     
-    if (isTimerRunning && !isDemoMode) {
+    if (isTimerRunning && !isDemoMode && hasGameStarted) {
       interval = setInterval(() => {
         if (currentPlayer === "white") {
           setWhiteTime(prev => {
@@ -556,7 +557,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
     return () => {
       if (interval) clearInterval(interval)
     }
-  }, [isTimerRunning, isDemoMode, currentPlayer])
+  }, [isTimerRunning, isDemoMode, currentPlayer, hasGameStarted])
 
   // Check for time out
   useEffect(() => {
@@ -590,6 +591,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
     setWhiteTime(timeControl * 60)
     setBlackTime(timeControl * 60)
     setGameStartTime(null)
+    setHasGameStarted(false)
   }
 
   const gameStatus = useMemo(
@@ -723,6 +725,13 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
             }
 
             if (!isDemoMode) {
+              // Start timer on first move
+              if (!hasGameStarted) {
+                setHasGameStarted(true)
+                setIsTimerRunning(true)
+                setGameStartTime(Date.now())
+              }
+              
               const opponentColor = currentPlayer === "white" ? "black" : "white"
               setCurrentPlayer(opponentColor)
             }
@@ -807,6 +816,12 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
     setLastMove(null)
     setPieceMoved(new Set())
     setIsDemoMode(false)
+    // Reset timer state
+    setIsTimerRunning(false)
+    setWhiteTime(timeControl * 60)
+    setBlackTime(timeControl * 60)
+    setGameStartTime(null)
+    setHasGameStarted(false)
   }
 
   const undoLastMove = () => {
