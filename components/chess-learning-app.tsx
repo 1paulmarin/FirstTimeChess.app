@@ -874,7 +874,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
         <div key={`${row}-${col}`} className={squareClass} onClick={() => handleSquareClick(row, col)}>
           {piece && (
             <span
-              className={`text-[min(8vw,2rem)] sm:text-[min(6vw,2.5rem)] md:text-[min(4vw,3rem)] lg:text-[min(3vw,3.5rem)] select-none font-bold ${
+              className={`text-[min(7vw,1.8rem)] sm:text-[min(5.5vw,2.2rem)] md:text-[min(4.5vw,2.8rem)] lg:text-[min(3.5vw,3.2rem)] xl:text-[min(3vw,3.5rem)] select-none font-bold ${
                 piece.color === "white"
                   ? "text-white drop-shadow-[0_0_2px_rgba(0,0,0,1)]"
                   : "text-black drop-shadow-[0_0_2px_rgba(255,255,255,0.8)]"
@@ -885,10 +885,10 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
           )}
           {isValidMove && (
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-[min(2vw,0.5rem)] h-[min(2vw,0.5rem)] sm:w-[min(1.5vw,0.75rem)] sm:h-[min(1.5vw,0.75rem)] md:w-[min(1vw,1rem)] md:h-[min(1vw,1rem)] bg-green-500 rounded-full opacity-80"></div>
+              <div className="w-[min(1.8vw,0.4rem)] h-[min(1.8vw,0.4rem)] sm:w-[min(1.4vw,0.6rem)] sm:h-[min(1.4vw,0.6rem)] md:w-[min(1.2vw,0.8rem)] md:h-[min(1.2vw,0.8rem)] lg:w-[min(1vw,0.9rem)] lg:h-[min(1vw,0.9rem)] bg-green-500 rounded-full opacity-80"></div>
             </div>
           )}
-          <div className="absolute bottom-0 right-0 text-[min(2vw,0.5rem)] sm:text-[min(1.5vw,0.75rem)] text-white font-bold pointer-events-none drop-shadow-[0_0_2px_rgba(0,0,0,1)]">
+          <div className="absolute bottom-0 right-0 text-[min(1.5vw,0.4rem)] sm:text-[min(1.2vw,0.6rem)] md:text-[min(1vw,0.7rem)] text-white font-bold pointer-events-none drop-shadow-[0_0_2px_rgba(0,0,0,1)]">
             {String.fromCharCode(97 + col)}
             {8 - row}
           </div>
@@ -969,26 +969,25 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-6">
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-1 space-y-3 sm:space-y-4">
               <Card className="mb-2 sm:mb-4">
-                <CardHeader>
-                  <CardTitle>{TRANSLATIONS[language].gameStatus}</CardTitle>
+                <CardHeader className="pb-2 sm:pb-4">
+                  <CardTitle className="text-sm sm:text-base">{TRANSLATIONS[language].gameStatus}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-lg font-semibold">{gameStatus}</p>
+                  <p className="text-sm sm:text-lg font-semibold">{gameStatus}</p>
                 </CardContent>
               </Card>
-            </div>
 
             <Card className="mb-2 sm:mb-4">
-              <CardHeader>
-                <CardTitle>{TRANSLATIONS[language].piecePalette}</CardTitle>
+              <CardHeader className="pb-2 sm:pb-4">
+                <CardTitle className="text-sm sm:text-base">{TRANSLATIONS[language].piecePalette}</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-2 sm:gap-3">
                   {(["white", "black"] as PieceColor[]).map((color) => (
                     <div key={color} className="space-y-2">
-                      <h4 className="font-semibold">
+                      <h4 className="font-semibold text-xs sm:text-sm">
                         {color === "white" ? TRANSLATIONS[language].whitePieces : TRANSLATIONS[language].blackPieces}
                       </h4>
                       <div className="grid grid-cols-3 gap-1 sm:gap-2">
@@ -997,7 +996,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
                             key={`${color}-${type}`}
                             variant="outline"
                             size="sm"
-                            className={`aspect-square p-0 text-lg sm:text-xl font-bold ${
+                            className={`aspect-square p-0 text-sm sm:text-lg md:text-xl font-bold ${
                               color === "white"
                                 ? "bg-white hover:bg-gray-50 border-2 border-gray-600 shadow-md"
                                 : "bg-gray-900 hover:bg-gray-800 text-white border-2 border-gray-400 shadow-md"
@@ -1040,20 +1039,20 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
             </Card>
 
             <Card>
-              <CardHeader>
-                <CardTitle>{TRANSLATIONS[language].boardControls}</CardTitle>
+              <CardHeader className="pb-2 sm:pb-4">
+                <CardTitle className="text-sm sm:text-base">{TRANSLATIONS[language].boardControls}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                <Button onClick={clearBoard} className="w-full bg-red-600 hover:bg-red-700">
+                <Button onClick={clearBoard} className="w-full bg-red-600 hover:bg-red-700 text-xs sm:text-sm py-2">
                   {TRANSLATIONS[language].clearBoard}
                 </Button>
-                <Button onClick={resetBoard} className="w-full bg-green-600 hover:bg-green-700">
+                <Button onClick={resetBoard} className="w-full bg-green-600 hover:bg-green-700 text-xs sm:text-sm py-2">
                   {TRANSLATIONS[language].resetToStart}
                 </Button>
-                <Button onClick={undoLastMove} className="w-full bg-blue-600 hover:bg-blue-700">
+                <Button onClick={undoLastMove} className="w-full bg-blue-600 hover:bg-blue-700 text-xs sm:text-sm py-2">
                   {TRANSLATIONS[language].undoLastMove}
                 </Button>
-                <Button onClick={() => setIsFlipped(!isFlipped)} className="w-full bg-purple-600 hover:bg-purple-700">
+                <Button onClick={() => setIsFlipped(!isFlipped)} className="w-full bg-purple-600 hover:bg-purple-700 text-xs sm:text-sm py-2">
                   {TRANSLATIONS[language].flipBoard}
                 </Button>
               </CardContent>
@@ -1061,10 +1060,10 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
           </div>
 
           <div className="lg:col-span-2 flex flex-col items-center justify-center px-2 sm:px-4">
-            <div className="mb-4 space-y-4">
+            <div className="mb-4 space-y-3 sm:space-y-4">
               <div className="flex flex-col sm:flex-row gap-2 items-center">
                 <Select value={boardTheme} onValueChange={(value: keyof typeof BOARD_THEMES) => setBoardTheme(value)}>
-                  <SelectTrigger className="w-32 sm:w-40 md:w-48">
+                  <SelectTrigger className="w-28 sm:w-36 md:w-44 text-xs sm:text-sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -1077,7 +1076,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
                 </Select>
                 
                 <Select value={timeControl.toString()} onValueChange={(value) => setTimeControl(parseInt(value))}>
-                  <SelectTrigger className="w-24 sm:w-32">
+                  <SelectTrigger className="w-20 sm:w-28 text-xs sm:text-sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -1092,54 +1091,54 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
               </div>
               
               {/* Time Control Display */}
-              <div className="flex justify-between items-center bg-gray-100 p-2 rounded-lg">
+              <div className="flex justify-between items-center bg-gray-100 p-2 sm:p-3 rounded-lg">
                 <div className="text-center">
-                  <div className="text-sm font-semibold text-gray-700">{TRANSLATIONS[language].whiteTime}</div>
-                  <div className={`text-lg font-bold ${whiteTime <= 30 ? 'text-red-600' : 'text-gray-900'}`}>
+                  <div className="text-xs sm:text-sm font-semibold text-gray-700">{TRANSLATIONS[language].whiteTime}</div>
+                  <div className={`text-sm sm:text-lg font-bold ${whiteTime <= 30 ? 'text-red-600' : 'text-gray-900'}`}>
                     {formatTime(whiteTime)}
                   </div>
                 </div>
                 
-                <div className="flex gap-2">
+                <div className="flex gap-1 sm:gap-2">
                   {!hasGameStarted ? (
-                    <Button onClick={startTimer} size="sm" className="bg-green-600 hover:bg-green-700">
+                    <Button onClick={startTimer} size="sm" className="bg-green-600 hover:bg-green-700 text-xs sm:text-sm px-2 sm:px-3">
                       {TRANSLATIONS[language].startGame}
                     </Button>
                   ) : isTimerPaused ? (
-                    <Button onClick={resumeTimer} size="sm" className="bg-green-600 hover:bg-green-700">
+                    <Button onClick={resumeTimer} size="sm" className="bg-green-600 hover:bg-green-700 text-xs sm:text-sm px-2 sm:px-3">
                       {TRANSLATIONS[language].resumeGame}
                     </Button>
                   ) : (
-                    <Button onClick={pauseTimer} size="sm" className="bg-yellow-600 hover:bg-yellow-700">
+                    <Button onClick={pauseTimer} size="sm" className="bg-yellow-600 hover:bg-yellow-700 text-xs sm:text-sm px-2 sm:px-3">
                       {TRANSLATIONS[language].pauseGame}
                     </Button>
                   )}
-                  <Button onClick={resetTimer} size="sm" variant="outline">
+                  <Button onClick={resetTimer} size="sm" variant="outline" className="text-xs sm:text-sm px-2 sm:px-3">
                     {TRANSLATIONS[language].resetTimer}
                   </Button>
                 </div>
                 
                 <div className="text-center">
-                  <div className="text-sm font-semibold text-gray-700">{TRANSLATIONS[language].blackTime}</div>
-                  <div className={`text-lg font-bold ${blackTime <= 30 ? 'text-red-600' : 'text-gray-900'}`}>
+                  <div className="text-xs sm:text-sm font-semibold text-gray-700">{TRANSLATIONS[language].blackTime}</div>
+                  <div className={`text-sm sm:text-lg font-bold ${blackTime <= 30 ? 'text-red-600' : 'text-gray-900'}`}>
                     {formatTime(blackTime)}
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="w-full max-w-[90vw] sm:max-w-[70vw] md:max-w-[60vw] lg:max-w-[50vw] aspect-square mx-auto border-2 sm:border-4 border-gray-800 bg-gray-900 p-1 sm:p-2 md:p-3 rounded-lg shadow-2xl overflow-hidden">
+            <div className="w-full max-w-[85vw] sm:max-w-[65vw] md:max-w-[55vw] lg:max-w-[45vw] xl:max-w-[40vw] aspect-square mx-auto border-2 sm:border-4 border-gray-800 bg-gray-900 p-1 sm:p-2 md:p-3 rounded-lg shadow-2xl overflow-hidden">
               <div className="w-full h-full grid grid-cols-8 grid-rows-8">{renderBoard()}</div>
             </div>
 
             {promotionDialog && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                <Card className="bg-white p-6">
-                  <CardHeader>
-                    <CardTitle>{TRANSLATIONS[language].choosePromotionPiece}</CardTitle>
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                <Card className="bg-white p-4 sm:p-6 max-w-sm w-full">
+                  <CardHeader className="pb-2 sm:pb-4">
+                    <CardTitle className="text-sm sm:text-base">{TRANSLATIONS[language].choosePromotionPiece}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="grid grid-cols-4 gap-1 sm:gap-2">
+                    <div className="grid grid-cols-4 gap-2 sm:gap-3">
                       {(["queen", "rook", "bishop", "knight"] as PieceType[]).map((pieceType) => {
                         const promotingPiece = board[promotionDialog.row][promotionDialog.col]
                         return (
@@ -1147,7 +1146,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
                             key={pieceType}
                             variant="outline"
                             size="lg"
-                            className="aspect-square text-2xl sm:text-3xl md:text-4xl bg-transparent"
+                            className="aspect-square text-xl sm:text-2xl md:text-3xl bg-transparent"
                             onClick={() => handlePromotion(pieceType)}
                           >
                             {promotingPiece && PIECE_SYMBOLS[promotingPiece.color][pieceType]}
