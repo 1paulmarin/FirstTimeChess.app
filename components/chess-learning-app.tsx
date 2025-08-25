@@ -640,7 +640,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
       }
 
       if (!isDemoMode) {
-        const currentGameStatus = getGameStatus(board, currentPlayer, lastMove, pieceMoved)
+        const currentGameStatus = getGameStatus(board, currentPlayer, lastMove || undefined, pieceMoved)
         if (currentGameStatus.includes("checkmate") || currentGameStatus.includes("stalemate")) {
           return // No moves allowed when game is over
         }
@@ -732,16 +732,16 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
             setLastClickTime(currentTime)
             setLastClickSquare([row, col])
             return
-          } else {
-            setSelectedSquare(null)
-            setValidMoves([])
           }
+        } else {
+          setSelectedSquare(null)
+          setValidMoves([])
         }
       }
 
       if (piece) {
         setSelectedSquare([row, col])
-        setValidMoves(getValidMoves(board, row, col, lastMove, pieceMoved))
+        setValidMoves(getValidMoves(board, row, col, lastMove || undefined, pieceMoved))
       } else {
         setSelectedSquare(null)
         setValidMoves([])
@@ -749,22 +749,20 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
 
       setLastClickTime(currentTime)
       setLastClickSquare([row, col])
-    }
-  },
-  [
-    board,
-    selectedSquare,
-    validMoves,
-    currentPlayer,
-    lastMove,
-    selectedPieceType,
-    lastClickTime,
-    lastClickSquare,
-    pieceMoved,
-    isDemoMode,
-    currentPlayer,
-  ],
-)
+    },
+    [
+      board,
+      selectedSquare,
+      validMoves,
+      currentPlayer,
+      lastMove,
+      selectedPieceType,
+      lastClickTime,
+      lastClickSquare,
+      pieceMoved,
+      isDemoMode,
+    ]
+  )
 
   const handlePromotion = (pieceType: PieceType) => {
     if (!promotionDialog) return
