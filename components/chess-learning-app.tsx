@@ -874,7 +874,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
         <div key={`${row}-${col}`} className={squareClass} onClick={() => handleSquareClick(row, col)}>
           {piece && (
             <span
-              className={`text-[min(6.5vw,1.6rem)] sm:text-[min(5vw,2rem)] md:text-[min(4vw,2.5rem)] lg:text-[min(3vw,2.8rem)] xl:text-[min(2.5vw,3rem)] select-none font-bold ${
+              className={`text-[min(5.5vw,1.4rem)] sm:text-[min(4.5vw,1.8rem)] md:text-[min(3.5vw,2.2rem)] lg:text-[min(2.5vw,2.5rem)] xl:text-[min(2vw,2.8rem)] select-none font-bold ${
                 piece.color === "white"
                   ? "text-white drop-shadow-[0_0_2px_rgba(0,0,0,1)]"
                   : "text-black drop-shadow-[0_0_2px_rgba(255,255,255,0.8)]"
@@ -968,16 +968,119 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
             </Button>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-6">
-            <div className="lg:col-span-1 space-y-3 sm:space-y-4">
-              <Card className="mb-2 sm:mb-4">
-                <CardHeader className="pb-2 sm:pb-4">
-                  <CardTitle className="text-sm sm:text-base">{TRANSLATIONS[language].gameStatus}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm sm:text-lg font-semibold">{gameStatus}</p>
-                </CardContent>
-              </Card>
+                    <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
+            {/* Board Section */}
+            <div className="flex-1 flex flex-col items-center justify-center px-2 sm:px-4">
+            <div className="mb-4 space-y-3 sm:space-y-4">
+              <div className="flex flex-col sm:flex-row gap-2 items-center">
+                <Select value={boardTheme} onValueChange={(value: keyof typeof BOARD_THEMES) => setBoardTheme(value)}>
+                  <SelectTrigger className="w-28 sm:w-36 md:w-44 text-xs sm:text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.keys(BOARD_THEMES).map((theme) => (
+                      <SelectItem key={theme} value={theme}>
+                        {theme}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                
+                <Select value={timeControl.toString()} onValueChange={(value) => setTimeControl(parseInt(value))}>
+                  <SelectTrigger className="w-20 sm:w-28 text-xs sm:text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">1 min</SelectItem>
+                    <SelectItem value="3">3 min</SelectItem>
+                    <SelectItem value="5">5 min</SelectItem>
+                    <SelectItem value="10">10 min</SelectItem>
+                    <SelectItem value="15">15 min</SelectItem>
+                    <SelectItem value="30">30 min</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              {/* Time Control Display */}
+              <div className="flex justify-between items-center bg-gray-100 p-2 sm:p-3 rounded-lg">
+                <div className="text-center">
+                  <div className="text-xs sm:text-sm font-semibold text-gray-700">{TRANSLATIONS[language].whiteTime}</div>
+                  <div className={`text-sm sm:text-lg font-bold ${whiteTime <= 30 ? 'text-red-600' : 'text-gray-900'}`}>
+                    {formatTime(whiteTime)}
+                  </div>
+                </div>
+                
+                <div className="flex gap-1 sm:gap-2">
+                  {!hasGameStarted ? (
+                    <Button onClick={startTimer} size="sm" className="bg-green-600 hover:bg-green-700 text-xs sm:text-sm px-2 sm:px-3">
+                      {TRANSLATIONS[language].startGame}
+                    </Button>
+                  ) : isTimerPaused ? (
+                    <Button onClick={resumeTimer} size="sm" className="bg-green-600 hover:bg-green-700 text-xs sm:text-sm px-2 sm:px-3">
+                      {TRANSLATIONS[language].resumeGame}
+                    </Button>
+                  ) : (
+                    <Button onClick={pauseTimer} size="sm" className="bg-yellow-600 hover:bg-yellow-700 text-xs sm:text-sm px-2 sm:px-3">
+                      {TRANSLATIONS[language].pauseGame}
+                    </Button>
+                  )}
+                  <Button onClick={resetTimer} size="sm" variant="outline" className="text-xs sm:text-sm px-2 sm:px-3">
+                    {TRANSLATIONS[language].resetTimer}
+                  </Button>
+                </div>
+                
+                <div className="text-center">
+                  <div className="text-xs sm:text-sm font-semibold text-gray-700">{TRANSLATIONS[language].blackTime}</div>
+                  <div className={`text-sm sm:text-lg font-bold ${blackTime <= 30 ? 'text-red-600' : 'text-gray-900'}`}>
+                    {formatTime(blackTime)}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full max-w-[65vw] sm:max-w-[50vw] md:max-w-[45vw] lg:max-w-[35vw] xl:max-w-[30vw] aspect-square mx-auto border-2 sm:border-4 border-gray-800 bg-gray-900 p-1 sm:p-2 md:p-3 rounded-lg shadow-2xl overflow-hidden">
+              <div className="w-full h-full grid grid-cols-8 grid-rows-8">{renderBoard()}</div>
+            </div>
+
+            {promotionDialog && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                <Card className="bg-white p-4 sm:p-6 max-w-sm w-full">
+                  <CardHeader className="pb-2 sm:pb-4">
+                    <CardTitle className="text-sm sm:text-base">{TRANSLATIONS[language].choosePromotionPiece}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-4 gap-2 sm:gap-3">
+                      {(["queen", "rook", "bishop", "knight"] as PieceType[]).map((pieceType) => {
+                        const promotingPiece = board[promotionDialog.row][promotionDialog.col]
+                        return (
+                          <Button
+                            key={pieceType}
+                            variant="outline"
+                            size="lg"
+                            className="aspect-square text-xl sm:text-2xl md:text-3xl bg-transparent"
+                            onClick={() => handlePromotion(pieceType)}
+                          >
+                            {promotingPiece && PIECE_SYMBOLS[promotingPiece.color][pieceType]}
+                          </Button>
+                        )
+                      })}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+          </div>
+
+          {/* Control Panel - Right Side on Desktop, Below on Mobile */}
+          <div className="lg:w-80 space-y-3 sm:space-y-4">
+            <Card className="mb-2 sm:mb-4">
+              <CardHeader className="pb-2 sm:pb-4">
+                <CardTitle className="text-sm sm:text-base">{TRANSLATIONS[language].gameStatus}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm sm:text-lg font-semibold">{gameStatus}</p>
+              </CardContent>
+            </Card>
 
             <Card className="mb-2 sm:mb-4">
               <CardHeader className="pb-2 sm:pb-4">
@@ -1057,107 +1160,6 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
                 </Button>
               </CardContent>
             </Card>
-          </div>
-
-          <div className="lg:col-span-2 flex flex-col items-center justify-center px-2 sm:px-4">
-            <div className="mb-4 space-y-3 sm:space-y-4">
-              <div className="flex flex-col sm:flex-row gap-2 items-center">
-                <Select value={boardTheme} onValueChange={(value: keyof typeof BOARD_THEMES) => setBoardTheme(value)}>
-                  <SelectTrigger className="w-28 sm:w-36 md:w-44 text-xs sm:text-sm">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.keys(BOARD_THEMES).map((theme) => (
-                      <SelectItem key={theme} value={theme}>
-                        {theme}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                
-                <Select value={timeControl.toString()} onValueChange={(value) => setTimeControl(parseInt(value))}>
-                  <SelectTrigger className="w-20 sm:w-28 text-xs sm:text-sm">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="1">1 min</SelectItem>
-                    <SelectItem value="3">3 min</SelectItem>
-                    <SelectItem value="5">5 min</SelectItem>
-                    <SelectItem value="10">10 min</SelectItem>
-                    <SelectItem value="15">15 min</SelectItem>
-                    <SelectItem value="30">30 min</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              {/* Time Control Display */}
-              <div className="flex justify-between items-center bg-gray-100 p-2 sm:p-3 rounded-lg">
-                <div className="text-center">
-                  <div className="text-xs sm:text-sm font-semibold text-gray-700">{TRANSLATIONS[language].whiteTime}</div>
-                  <div className={`text-sm sm:text-lg font-bold ${whiteTime <= 30 ? 'text-red-600' : 'text-gray-900'}`}>
-                    {formatTime(whiteTime)}
-                  </div>
-                </div>
-                
-                <div className="flex gap-1 sm:gap-2">
-                  {!hasGameStarted ? (
-                    <Button onClick={startTimer} size="sm" className="bg-green-600 hover:bg-green-700 text-xs sm:text-sm px-2 sm:px-3">
-                      {TRANSLATIONS[language].startGame}
-                    </Button>
-                  ) : isTimerPaused ? (
-                    <Button onClick={resumeTimer} size="sm" className="bg-green-600 hover:bg-green-700 text-xs sm:text-sm px-2 sm:px-3">
-                      {TRANSLATIONS[language].resumeGame}
-                    </Button>
-                  ) : (
-                    <Button onClick={pauseTimer} size="sm" className="bg-yellow-600 hover:bg-yellow-700 text-xs sm:text-sm px-2 sm:px-3">
-                      {TRANSLATIONS[language].pauseGame}
-                    </Button>
-                  )}
-                  <Button onClick={resetTimer} size="sm" variant="outline" className="text-xs sm:text-sm px-2 sm:px-3">
-                    {TRANSLATIONS[language].resetTimer}
-                  </Button>
-                </div>
-                
-                <div className="text-center">
-                  <div className="text-xs sm:text-sm font-semibold text-gray-700">{TRANSLATIONS[language].blackTime}</div>
-                  <div className={`text-sm sm:text-lg font-bold ${blackTime <= 30 ? 'text-red-600' : 'text-gray-900'}`}>
-                    {formatTime(blackTime)}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="w-full max-w-[75vw] sm:max-w-[60vw] md:max-w-[50vw] lg:max-w-[40vw] xl:max-w-[35vw] aspect-square mx-auto border-2 sm:border-4 border-gray-800 bg-gray-900 p-1 sm:p-2 md:p-3 rounded-lg shadow-2xl overflow-hidden">
-              <div className="w-full h-full grid grid-cols-8 grid-rows-8">{renderBoard()}</div>
-            </div>
-
-            {promotionDialog && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                <Card className="bg-white p-4 sm:p-6 max-w-sm w-full">
-                  <CardHeader className="pb-2 sm:pb-4">
-                    <CardTitle className="text-sm sm:text-base">{TRANSLATIONS[language].choosePromotionPiece}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-4 gap-2 sm:gap-3">
-                      {(["queen", "rook", "bishop", "knight"] as PieceType[]).map((pieceType) => {
-                        const promotingPiece = board[promotionDialog.row][promotionDialog.col]
-                        return (
-                          <Button
-                            key={pieceType}
-                            variant="outline"
-                            size="lg"
-                            className="aspect-square text-xl sm:text-2xl md:text-3xl bg-transparent"
-                            onClick={() => handlePromotion(pieceType)}
-                          >
-                            {promotingPiece && PIECE_SYMBOLS[promotingPiece.color][pieceType]}
-                          </Button>
-                        )
-                      })}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            )}
           </div>
         </div>
       </div>
