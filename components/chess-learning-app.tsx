@@ -951,6 +951,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
                   <p className="text-lg font-semibold">{gameStatus}</p>
                 </CardContent>
               </Card>
+            </div>
 
             <Card className="mb-2 sm:mb-4">
               <CardHeader>
