@@ -538,7 +538,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
 
   const gameStatus = useMemo(
     () => getGameStatusTranslated(board, currentPlayer, lastMove, pieceMoved),
-    [board, currentPlayer, lastMove, pieceMoved, language],
+    [getGameStatusTranslated, board, currentPlayer, lastMove, pieceMoved],
   )
 
   const handleSquareClick = useCallback(
