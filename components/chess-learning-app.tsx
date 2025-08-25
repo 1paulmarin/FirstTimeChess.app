@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback, useMemo } from "react"
+import { useState, useCallback, useMemo, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -458,6 +458,12 @@ const TRANSLATIONS = {
     whiteToMove: "White to move",
     blackToMove: "Black to move",
     choosePromotionPiece: "Choose Promotion Piece",
+    timeControl: "Time Control",
+    whiteTime: "White Time",
+    blackTime: "Black Time",
+    startGame: "Start Game",
+    pauseGame: "Pause Game",
+    resetTimer: "Reset Timer",
   },
   ro: {
     gameStatus: "Starea Jocului",
@@ -480,6 +486,12 @@ const TRANSLATIONS = {
     whiteToMove: "Albul la mutare",
     blackToMove: "Negrul la mutare",
     choosePromotionPiece: "Alege Piesa de Promovare",
+    timeControl: "Control Timp",
+    whiteTime: "Timp Alb",
+    blackTime: "Timp Negru",
+    startGame: "Începe Jocul",
+    pauseGame: "Pune Pauză",
+    resetTimer: "Resetează Cronometrul",
   },
 }
 
@@ -501,6 +513,13 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
   const [language, setLanguage] = useState<Language>("en")
   const [pieceMoved, setPieceMoved] = useState<Set<string>>(new Set())
   const [isDemoMode, setIsDemoMode] = useState(false)
+  
+  // Time control state
+  const [timeControl, setTimeControl] = useState<number>(10) // minutes per player
+  const [whiteTime, setWhiteTime] = useState<number>(timeControl * 60) // seconds
+  const [blackTime, setBlackTime] = useState<number>(timeControl * 60) // seconds
+  const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false)
+  const [gameStartTime, setGameStartTime] = useState<number | null>(null)
 
   const whiteKingInCheck = useMemo(() => {
     const inCheck = isInCheck(board, "white")
@@ -511,6 +530,65 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
     const inCheck = isInCheck(board, "black")
     return inCheck
   }, [board])
+
+  // Timer effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null
+    
+    if (isTimerRunning && !isDemoMode) {
+      interval = setInterval(() => {
+        if (currentPlayer === "white") {
+          setWhiteTime(prev => {
+            if (prev <= 0) return 0
+            return prev - 1
+          })
+        } else {
+          setBlackTime(prev => {
+            if (prev <= 0) return 0
+            return prev - 1
+          })
+        }
+      }, 1000)
+    }
+    
+    return () => {
+      if (interval) clearInterval(interval)
+    }
+  }, [isTimerRunning, isDemoMode, currentPlayer])
+
+  // Check for time out
+  useEffect(() => {
+    if (whiteTime <= 0 && isTimerRunning) {
+      setIsTimerRunning(false)
+      // Black wins on time
+    }
+    if (blackTime <= 0 && isTimerRunning) {
+      setIsTimerRunning(false)
+      // White wins on time
+    }
+  }, [whiteTime, blackTime, isTimerRunning])
+
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins}:${secs.toString().padStart(2, '0')}`
+  }
+
+  const startTimer = () => {
+    setIsTimerRunning(true)
+    setGameStartTime(Date.now())
+  }
+
+  const pauseTimer = () => {
+    setIsTimerRunning(false)
+  }
+
+  const resetTimer = () => {
+    setIsTimerRunning(false)
+    setWhiteTime(timeControl * 60)
+    setBlackTime(timeControl * 60)
+    setGameStartTime(null)
+  }
 
   const gameStatus = useMemo(
     () => {
@@ -956,19 +1034,67 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
           </div>
 
           <div className="lg:col-span-2 flex flex-col items-center justify-center px-2 sm:px-4">
-            <div className="mb-4">
-              <Select value={boardTheme} onValueChange={(value: keyof typeof BOARD_THEMES) => setBoardTheme(value)}>
-                <SelectTrigger className="w-32 sm:w-40 md:w-48">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.keys(BOARD_THEMES).map((theme) => (
-                    <SelectItem key={theme} value={theme}>
-                      {theme}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="mb-4 space-y-4">
+              <div className="flex flex-col sm:flex-row gap-2 items-center">
+                <Select value={boardTheme} onValueChange={(value: keyof typeof BOARD_THEMES) => setBoardTheme(value)}>
+                  <SelectTrigger className="w-32 sm:w-40 md:w-48">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.keys(BOARD_THEMES).map((theme) => (
+                      <SelectItem key={theme} value={theme}>
+                        {theme}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                
+                <Select value={timeControl.toString()} onValueChange={(value) => setTimeControl(parseInt(value))}>
+                  <SelectTrigger className="w-24 sm:w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">1 min</SelectItem>
+                    <SelectItem value="3">3 min</SelectItem>
+                    <SelectItem value="5">5 min</SelectItem>
+                    <SelectItem value="10">10 min</SelectItem>
+                    <SelectItem value="15">15 min</SelectItem>
+                    <SelectItem value="30">30 min</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              {/* Time Control Display */}
+              <div className="flex justify-between items-center bg-gray-100 p-2 rounded-lg">
+                <div className="text-center">
+                  <div className="text-sm font-semibold text-gray-700">{TRANSLATIONS[language].whiteTime}</div>
+                  <div className={`text-lg font-bold ${whiteTime <= 30 ? 'text-red-600' : 'text-gray-900'}`}>
+                    {formatTime(whiteTime)}
+                  </div>
+                </div>
+                
+                <div className="flex gap-2">
+                  {!isTimerRunning ? (
+                    <Button onClick={startTimer} size="sm" className="bg-green-600 hover:bg-green-700">
+                      {TRANSLATIONS[language].startGame}
+                    </Button>
+                  ) : (
+                    <Button onClick={pauseTimer} size="sm" className="bg-yellow-600 hover:bg-yellow-700">
+                      {TRANSLATIONS[language].pauseGame}
+                    </Button>
+                  )}
+                  <Button onClick={resetTimer} size="sm" variant="outline">
+                    {TRANSLATIONS[language].resetTimer}
+                  </Button>
+                </div>
+                
+                <div className="text-center">
+                  <div className="text-sm font-semibold text-gray-700">{TRANSLATIONS[language].blackTime}</div>
+                  <div className={`text-lg font-bold ${blackTime <= 30 ? 'text-red-600' : 'text-gray-900'}`}>
+                    {formatTime(blackTime)}
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="w-full max-w-[90vw] sm:max-w-[70vw] md:max-w-[60vw] lg:max-w-[50vw] aspect-square mx-auto border-2 sm:border-4 border-gray-800 bg-gray-900 p-1 sm:p-2 md:p-3 rounded-lg shadow-2xl overflow-hidden">
