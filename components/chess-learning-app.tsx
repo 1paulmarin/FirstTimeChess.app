@@ -498,7 +498,8 @@ const TRANSLATIONS = {
 type Language = keyof typeof TRANSLATIONS
 
 export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: { user: any; room: any; onLeaveRoom: () => void; onLogout: () => void }) {
-  // Force Vercel to use latest commit with all TypeScript fixes - commit 7f55725
+  // FORCE VERCEL DEPLOYMENT: Clean build with no middleware conflicts - commit 011d8ee
+  // All TypeScript errors fixed, strict checking enabled, no routing issues
   const [board, setBoard] = useState<Square[][]>(createInitialBoard)
   const [selectedSquare, setSelectedSquare] = useState<[number, number] | null>(null)
   const [selectedPieceType, setSelectedPieceType] = useState<Square | null>(null)
