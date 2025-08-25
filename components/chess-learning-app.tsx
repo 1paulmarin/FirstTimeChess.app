@@ -766,7 +766,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
         ((piece.color === "white" && whiteKingInCheck) || (piece.color === "black" && blackKingInCheck))
 
       const theme = BOARD_THEMES[boardTheme]
-      let squareClass = `w-16 h-16 flex items-center justify-center cursor-pointer border ${theme.border} relative min-w-[64px] min-h-[64px]`
+      let squareClass = `w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 flex items-center justify-center cursor-pointer border ${theme.border} relative min-w-[32px] min-h-[32px] sm:min-w-[48px] sm:min-h-[48px] md:min-w-[64px] md:min-h-[64px]`
 
       if (isKingInCheck) {
         squareClass +=
@@ -781,7 +781,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
         <div key={`${row}-${col}`} className={squareClass} onClick={() => handleSquareClick(row, col)}>
           {piece && (
             <span
-              className={`text-5xl select-none font-bold ${
+              className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl select-none font-bold ${
                 piece.color === "white"
                   ? "text-white drop-shadow-[0_0_2px_rgba(0,0,0,1)]"
                   : "text-black drop-shadow-[0_0_2px_rgba(255,255,255,0.8)]"
@@ -792,10 +792,10 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
           )}
           {isValidMove && (
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-3 h-3 bg-green-500 rounded-full opacity-80"></div>
+              <div className="w-1 h-1 sm:w-2 sm:h-2 md:w-3 md:h-3 bg-green-500 rounded-full opacity-80"></div>
             </div>
           )}
-          <div className="absolute bottom-0 right-0 text-xs text-white font-bold pointer-events-none drop-shadow-[0_0_2px_rgba(0,0,0,1)]">
+          <div className="absolute bottom-0 right-0 text-[8px] sm:text-xs text-white font-bold pointer-events-none drop-shadow-[0_0_2px_rgba(0,0,0,1)]">
             {String.fromCharCode(97 + col)}
             {8 - row}
           </div>
@@ -829,12 +829,12 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
       <div className="bg-amber-50 border-b-2 border-amber-800 p-4 shadow-lg">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <img src="/images/first-time-chess-logo-new.png" alt="First Time Chess" className="h-12 w-auto" />
-              <div className="h-8 w-px bg-amber-800"></div>
-              <div>
-                <h1 className="text-xl font-bold text-amber-900">Chess Game</h1>
-                {room && <p className="text-sm text-amber-700">{room.name}</p>}
+            <div className="flex items-center gap-2 sm:gap-4">
+              <img src="/images/first-time-chess-logo-new.png" alt="First Time Chess" className="h-8 sm:h-10 md:h-12 w-auto" />
+              <div className="h-6 sm:h-8 w-px bg-amber-800 hidden sm:block"></div>
+              <div className="hidden sm:block">
+                <h1 className="text-lg sm:text-xl font-bold text-amber-900">Chess Game</h1>
+                {room && <p className="text-xs sm:text-sm text-amber-700">{room.name}</p>}
               </div>
             </div>
             <div className="flex items-center gap-2 sm:gap-3">
@@ -868,7 +868,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
         </div>
       </div>
 
-      <div className="p-4">
+      <div className="p-2 sm:p-4">
         <div className="max-w-7xl mx-auto">
           {/* Mobile Back to Lobby Button - Always Visible */}
           <div className="mb-4 flex justify-center lg:hidden">
@@ -881,9 +881,9 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
             </Button>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-6">
             <div className="lg:col-span-1">
-              <Card className="mb-4">
+              <Card className="mb-2 sm:mb-4">
                 <CardHeader>
                   <CardTitle>{TRANSLATIONS[language].gameStatus}</CardTitle>
                 </CardHeader>
@@ -892,7 +892,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
                 </CardContent>
               </Card>
 
-            <Card className="mb-4">
+            <Card className="mb-2 sm:mb-4">
               <CardHeader>
                 <CardTitle>{TRANSLATIONS[language].piecePalette}</CardTitle>
               </CardHeader>
@@ -903,13 +903,13 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
                       <h4 className="font-semibold">
                         {color === "white" ? TRANSLATIONS[language].whitePieces : TRANSLATIONS[language].blackPieces}
                       </h4>
-                      <div className="grid grid-cols-3 gap-1">
+                      <div className="grid grid-cols-3 gap-1 sm:gap-2">
                         {(["pawn", "rook", "knight", "bishop", "queen", "king"] as PieceType[]).map((type) => (
                           <Button
                             key={`${color}-${type}`}
                             variant="outline"
                             size="sm"
-                            className={`aspect-square p-0 text-xl font-bold ${
+                            className={`aspect-square p-0 text-lg sm:text-xl font-bold ${
                               color === "white"
                                 ? "bg-white hover:bg-gray-50 border-2 border-gray-600 shadow-md"
                                 : "bg-gray-900 hover:bg-gray-800 text-white border-2 border-gray-400 shadow-md"
@@ -972,10 +972,10 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
             </Card>
           </div>
 
-          <div className="lg:col-span-2 flex flex-col items-center justify-center">
+          <div className="lg:col-span-2 flex flex-col items-center justify-center px-2 sm:px-4">
             <div className="mb-4">
               <Select value={boardTheme} onValueChange={(value: keyof typeof BOARD_THEMES) => setBoardTheme(value)}>
-                <SelectTrigger className="w-48">
+                <SelectTrigger className="w-32 sm:w-40 md:w-48">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -988,7 +988,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
               </Select>
             </div>
 
-            <div className="border-4 border-gray-800 bg-gray-900 p-3 rounded-lg shadow-2xl">
+            <div className="border-2 sm:border-4 border-gray-800 bg-gray-900 p-1 sm:p-2 md:p-3 rounded-lg shadow-2xl max-w-full overflow-hidden">
               <div className="flex flex-col">{renderBoard()}</div>
             </div>
 
@@ -999,7 +999,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
                     <CardTitle>{TRANSLATIONS[language].choosePromotionPiece}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="grid grid-cols-4 gap-2">
+                    <div className="grid grid-cols-4 gap-1 sm:gap-2">
                       {(["queen", "rook", "bishop", "knight"] as PieceType[]).map((pieceType) => {
                         const promotingPiece = board[promotionDialog.row][promotionDialog.col]
                         return (
@@ -1007,7 +1007,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
                             key={pieceType}
                             variant="outline"
                             size="lg"
-                            className="aspect-square text-4xl bg-transparent"
+                            className="aspect-square text-2xl sm:text-3xl md:text-4xl bg-transparent"
                             onClick={() => handlePromotion(pieceType)}
                           >
                             {promotingPiece && PIECE_SYMBOLS[promotingPiece.color][pieceType]}
