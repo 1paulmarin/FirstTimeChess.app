@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="300" height="80">
+  <!-- Cream background -->
+  <rect width="300" height="80" fill="#f5f5dc" rx="8" ry="8"/>
+  
+  <!-- Black Chess King (Staunton design) -->
+  <!-- King base -->
+  <rect x="20" y="50" width="40" height="8" fill="#000"/>
+  <!-- King body -->
+  <rect x="25" y="30" width="30" height="20" fill="#000"/>
+  <!-- King top -->
+  <rect x="30" y="15" width="20" height="15" fill="#000"/>
+  <!-- King cross -->
+  <rect x="35" y="8" width="10" height="7" fill="#000"/>
+  <rect x="32.5" y="11" width="15" height="2" fill="#000"/>
+  
+  <!-- Text: FIRST TIME CHESS app -->
+  <!-- FIRST TIME -->
+  <text x="80" y="25" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#000" text-anchor="start">FIRST TIME</text>
+  <!-- CHESS -->
+  <text x="80" y="45" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#000" text-anchor="start">CHESS</text>
+  <!-- app -->
+  <text x="80" y="65" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="start">app</text>
+</svg>

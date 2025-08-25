@@ -245,7 +245,7 @@ export default function RoomManager({ user, onJoinRoom, onLogout, onUpdateUser }
         <div className="bg-amber-50 border-2 border-amber-800 rounded-lg shadow-lg mb-6 p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <img src="/images/first-time-chess-logo-new.png" alt="First Time Chess" className="h-16 w-auto" />
+                              <img src="/images/first-time-chess-logo-app.svg" alt="First Time Chess app" className="h-16 w-auto" />
               <div className="h-8 w-px bg-amber-800"></div>
               <h1 className="text-2xl font-bold text-amber-900">First Time Chess Studio</h1>
               <Badge variant="outline" className="text-sm border-amber-800 text-amber-800 bg-amber-100">

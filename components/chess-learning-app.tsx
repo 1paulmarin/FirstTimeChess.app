@@ -891,7 +891,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 sm:gap-4">
-              <img src="/images/first-time-chess-logo-new.png" alt="First Time Chess" className="h-8 sm:h-10 md:h-12 w-auto" />
+                              <img src="/images/first-time-chess-logo-app.svg" alt="First Time Chess app" className="h-8 sm:h-10 md:h-12 w-auto" />
               <div className="h-6 sm:h-8 w-px bg-amber-800 hidden sm:block"></div>
               <div className="hidden sm:block">
                 <h1 className="text-lg sm:text-xl font-bold text-amber-900">Chess Game</h1>

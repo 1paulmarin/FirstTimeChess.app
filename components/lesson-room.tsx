@@ -218,7 +218,7 @@ export default function LessonRoom({ room, user, onLeaveRoom, onLogout }: Lesson
         <div className="bg-amber-50 border-b-2 border-amber-800 p-4 shadow-lg">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <img src="/images/first-time-chess-logo-new.png" alt="First Time Chess" className="h-12 w-auto" />
+                              <img src="/images/first-time-chess-logo-app.svg" alt="First Time Chess app" className="h-12 w-auto" />
               <div className="h-8 w-px bg-amber-800"></div>
               <div>
                 <h1 className="text-xl font-bold text-amber-900">{room.name} - Chess Game</h1>
@@ -260,7 +260,7 @@ export default function LessonRoom({ room, user, onLeaveRoom, onLogout }: Lesson
         <div className="bg-amber-50 border-2 border-amber-800 rounded-lg shadow-lg mb-6 p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <img src="/images/first-time-chess-logo-new.png" alt="First Time Chess" className="h-16 w-auto" />
+                              <img src="/images/first-time-chess-logo-app.svg" alt="First Time Chess app" className="h-16 w-auto" />
               <div className="h-8 w-px bg-amber-800"></div>
               <div>
                 <h1 className="text-2xl font-bold text-amber-900">{room.name}</h1>
