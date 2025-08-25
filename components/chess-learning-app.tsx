@@ -755,7 +755,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
         ((piece.color === "white" && whiteKingInCheck) || (piece.color === "black" && blackKingInCheck))
 
       const theme = BOARD_THEMES[boardTheme]
-      let squareClass = `w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 flex items-center justify-center cursor-pointer border ${theme.border} relative min-w-[32px] min-h-[32px] sm:min-w-[48px] sm:min-h-[48px] md:min-w-[64px] md:min-h-[64px]`
+      let squareClass = `w-full h-full flex items-center justify-center cursor-pointer border ${theme.border} relative`
 
       if (isKingInCheck) {
         squareClass +=
@@ -770,7 +770,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
         <div key={`${row}-${col}`} className={squareClass} onClick={() => handleSquareClick(row, col)}>
           {piece && (
             <span
-              className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl select-none font-bold ${
+              className={`text-[min(8vw,2rem)] sm:text-[min(6vw,2.5rem)] md:text-[min(4vw,3rem)] lg:text-[min(3vw,3.5rem)] select-none font-bold ${
                 piece.color === "white"
                   ? "text-white drop-shadow-[0_0_2px_rgba(0,0,0,1)]"
                   : "text-black drop-shadow-[0_0_2px_rgba(255,255,255,0.8)]"
@@ -781,10 +781,10 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
           )}
           {isValidMove && (
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-1 h-1 sm:w-2 sm:h-2 md:w-3 md:h-3 bg-green-500 rounded-full opacity-80"></div>
+              <div className="w-[min(2vw,0.5rem)] h-[min(2vw,0.5rem)] sm:w-[min(1.5vw,0.75rem)] sm:h-[min(1.5vw,0.75rem)] md:w-[min(1vw,1rem)] md:h-[min(1vw,1rem)] bg-green-500 rounded-full opacity-80"></div>
             </div>
           )}
-          <div className="absolute bottom-0 right-0 text-[8px] sm:text-xs text-white font-bold pointer-events-none drop-shadow-[0_0_2px_rgba(0,0,0,1)]">
+          <div className="absolute bottom-0 right-0 text-[min(2vw,0.5rem)] sm:text-[min(1.5vw,0.75rem)] text-white font-bold pointer-events-none drop-shadow-[0_0_2px_rgba(0,0,0,1)]">
             {String.fromCharCode(97 + col)}
             {8 - row}
           </div>
@@ -795,21 +795,15 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
   )
 
   const renderBoard = () => {
-    const rows = []
+    const squares = []
     for (let row = 0; row < 8; row++) {
-      const cols = []
       for (let col = 0; col < 8; col++) {
         const displayRow = isFlipped ? 7 - row : row
         const displayCol = isFlipped ? 7 - col : col
-        cols.push(renderSquare(displayRow, displayCol))
+        squares.push(renderSquare(displayRow, displayCol))
       }
-      rows.push(
-        <div key={row} className="flex">
-          {cols}
-        </div>,
-      )
     }
-    return rows
+    return squares
   }
 
   return (
@@ -977,8 +971,8 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
               </Select>
             </div>
 
-            <div className="border-2 sm:border-4 border-gray-800 bg-gray-900 p-1 sm:p-2 md:p-3 rounded-lg shadow-2xl max-w-full overflow-hidden">
-              <div className="flex flex-col">{renderBoard()}</div>
+            <div className="w-full max-w-[90vw] sm:max-w-[70vw] md:max-w-[60vw] lg:max-w-[50vw] aspect-square mx-auto border-2 sm:border-4 border-gray-800 bg-gray-900 p-1 sm:p-2 md:p-3 rounded-lg shadow-2xl overflow-hidden">
+              <div className="w-full h-full grid grid-cols-8 grid-rows-8">{renderBoard()}</div>
             </div>
 
             {promotionDialog && (
