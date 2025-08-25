@@ -138,8 +138,8 @@ export default function LessonRoom({ room, user, onLeaveRoom, onLogout }: Lesson
           whitePlayerName: user.name,
           blackPlayerName: player2.name,
           status: "active",
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
+                      updatedAt: new Date().toISOString(),
         }
         
         setCurrentRoom(updatedRoom)
@@ -206,7 +206,7 @@ export default function LessonRoom({ room, user, onLeaveRoom, onLogout }: Lesson
     }
   }
 
-  const isTeacher = user.id === room.teacher_id
+  const isTeacher = user.id === room.teacherId
   const currentParticipant = currentRoom.participants.find(p => p.id === user.id)
   const isPlaying = currentParticipant?.status === "playing"
   const isInvited = currentParticipant?.status === "invited"
@@ -268,7 +268,7 @@ export default function LessonRoom({ room, user, onLeaveRoom, onLogout }: Lesson
               </div>
               <Badge variant="outline" className="text-sm border-amber-800 text-amber-800 bg-amber-100">
                 <Users className="w-3 h-3 mr-1" />
-                {currentRoom.participants.length}/{room.max_participants}
+                {currentRoom.participants.length}/{room.maxParticipants}
               </Badge>
             </div>
             <div className="flex items-center gap-2">
@@ -393,18 +393,18 @@ export default function LessonRoom({ room, user, onLeaveRoom, onLogout }: Lesson
                   <div className="flex items-center gap-2 p-2 bg-amber-50 rounded">
                     <span className="text-sm text-amber-700">Invite Code:</span>
                     <code className="bg-white px-2 py-1 rounded text-sm font-mono border">
-                      {room.invite_code}
+                      {room.inviteCode}
                     </code>
-                    <Button variant="ghost" size="sm" onClick={() => copyInviteCode(room.invite_code)}>
+                    <Button variant="ghost" size="sm" onClick={() => copyInviteCode(room.inviteCode)}>
                       <Copy className="w-4 h-4" />
                     </Button>
                   </div>
                   <div className="flex items-center gap-2 p-2 bg-amber-50 rounded">
                     <span className="text-sm text-amber-700">Room Link:</span>
                     <code className="bg-white px-2 py-1 rounded text-xs font-mono border flex-1 truncate">
-                      {room.unique_link}
+                      {room.uniqueLink}
                     </code>
-                    <Button variant="ghost" size="sm" onClick={() => copyRoomLink(room.unique_link || "")}>
+                    <Button variant="ghost" size="sm" onClick={() => copyRoomLink(room.uniqueLink || "")}>
                       <Link className="w-4 h-4" />
                     </Button>
                   </div>
@@ -456,8 +456,8 @@ export default function LessonRoom({ room, user, onLeaveRoom, onLogout }: Lesson
                     >
                       <div className="flex items-center gap-3">
                         <Avatar className="w-10 h-10">
-                          {participant.avatar_url ? (
-                            <AvatarImage src={participant.avatar_url} alt={participant.name} />
+                          {participant.avatarUrl ? (
+                            <AvatarImage src={participant.avatarUrl} alt={participant.name} />
                           ) : (
                             <AvatarFallback className="text-sm">
                               {getInitials(participant.name)}
@@ -481,7 +481,7 @@ export default function LessonRoom({ room, user, onLeaveRoom, onLogout }: Lesson
                             </Badge>
                           </div>
                           <p className="text-sm text-amber-600">
-                            Joined {new Date(participant.joined_at).toLocaleTimeString()}
+                            Joined {new Date(participant.joinedAt).toLocaleTimeString()}
                           </p>
                         </div>
                       </div>

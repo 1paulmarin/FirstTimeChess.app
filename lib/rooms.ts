@@ -5,9 +5,9 @@ export interface LessonParticipant {
   name: string
   email: string
   role: "teacher" | "student"
-  avatar_url?: string
+  avatarUrl?: string
   status: "spectating" | "playing" | "invited"
-  joined_at: string
+  joinedAt: string
 }
 
 export interface LessonGame {
@@ -17,15 +17,15 @@ export interface LessonGame {
   whitePlayerName: string
   blackPlayerName: string
   status: "active" | "completed" | "paused"
-  created_at: string
-  updated_at: string
+  createdAt: string
+  updatedAt: string
 }
 
 export interface LessonRoom extends GameRoom {
   isLessonMode: boolean
   participants: LessonParticipant[]
   currentGame?: LessonGame | null
-  max_participants: number
+  maxParticipants: number
 }
 
 export async function createLessonRoom(name: string, teacherId: string, teacherName: string): Promise<LessonRoom | null> {
@@ -35,11 +35,11 @@ export async function createLessonRoom(name: string, teacherId: string, teacherN
   const room: LessonRoom = {
     id: roomId,
     name: name.trim(),
-    teacher_id: teacherId,
-    teacher_name: teacherName,
-    invite_code: inviteCode,
-    unique_link: `${window.location.origin}/room/${roomId}`,
-    max_participants: 10,
+    teacherId: teacherId,
+    teacherName: teacherName,
+    inviteCode: inviteCode,
+    uniqueLink: `${window.location.origin}/room/${roomId}`,
+    maxParticipants: 10,
     participants: [
       {
         id: teacherId,
@@ -47,13 +47,13 @@ export async function createLessonRoom(name: string, teacherId: string, teacherN
         email: "", // Will be filled from user data
         role: "teacher",
         status: "spectating",
-        joined_at: new Date().toISOString(),
+        joinedAt: new Date().toISOString(),
       }
     ],
     isLessonMode: true,
     currentGame: null,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   }
 
   // Store in localStorage
@@ -71,14 +71,15 @@ export async function createRoom(name: string, teacherId: string, teacherName: s
   const room: GameRoom = {
     id: roomId,
     name: name.trim(),
-    teacher_id: teacherId,
-    teacher_name: teacherName,
-    invite_code: inviteCode,
-    unique_link: `${window.location.origin}/room/${roomId}`,
-    max_participants: 10,
+    teacherId: teacherId,
+    teacherName: teacherName,
+    inviteCode: inviteCode,
+    uniqueLink: `${window.location.origin}/room/${roomId}`,
+    maxParticipants: 10,
     participants: [],
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
+    isLessonMode: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   }
 
   // Store in localStorage
@@ -91,12 +92,12 @@ export async function createRoom(name: string, teacherId: string, teacherName: s
 
 export async function getLessonRoomByInviteCode(inviteCode: string): Promise<LessonRoom | null> {
   const rooms = JSON.parse(localStorage.getItem("lesson_rooms") || "[]")
-  return rooms.find((room: LessonRoom) => room.invite_code === inviteCode.toUpperCase()) || null
+  return rooms.find((room: LessonRoom) => room.inviteCode === inviteCode.toUpperCase()) || null
 }
 
 export async function getRoomByInviteCode(inviteCode: string): Promise<GameRoom | null> {
   const rooms = JSON.parse(localStorage.getItem("game_rooms") || "[]")
-  return rooms.find((room: GameRoom) => room.invite_code === inviteCode.toUpperCase()) || null
+  return rooms.find((room: GameRoom) => room.inviteCode === inviteCode.toUpperCase()) || null
 }
 
 export async function joinLessonRoom(roomId: string, userId: string, userName: string, userEmail: string, userRole: "teacher" | "student"): Promise<boolean> {
@@ -106,12 +107,12 @@ export async function joinLessonRoom(roomId: string, userId: string, userName: s
   if (roomIndex === -1) return false
 
   // Check if room is at capacity
-  if (rooms[roomIndex].participants.length >= rooms[roomIndex].max_participants) {
+  if (rooms[roomIndex].participants.length >= rooms[roomIndex].maxParticipants) {
     return false
   }
 
   // Check if user is already in the room
-  const isAlreadyParticipant = rooms[roomIndex].participants.find((p) => p.id === userId)
+  const isAlreadyParticipant = rooms[roomIndex].participants.find((p: any) => p.id === userId)
 
   if (!isAlreadyParticipant) {
     const newParticipant: LessonParticipant = {
@@ -120,7 +121,7 @@ export async function joinLessonRoom(roomId: string, userId: string, userName: s
       email: userEmail,
       role: userRole,
       status: "spectating",
-      joined_at: new Date().toISOString(),
+              joinedAt: new Date().toISOString(),
     }
     
     rooms[roomIndex].participants.push(newParticipant)
@@ -155,7 +156,7 @@ export async function leaveLessonRoom(roomId: string, userId: string): Promise<b
 
   if (roomIndex === -1) return false
 
-  rooms[roomIndex].participants = rooms[roomIndex].participants.filter((p) => p.id !== userId)
+  rooms[roomIndex].participants = rooms[roomIndex].participants.filter((p: any) => p.id !== userId)
   localStorage.setItem("lesson_rooms", JSON.stringify(rooms))
 
   return true
@@ -179,7 +180,7 @@ export async function inviteStudentToPlay(roomId: string, studentId: string): Pr
 
   if (roomIndex === -1) return false
 
-  const studentIndex = rooms[roomIndex].participants.findIndex((p) => p.id === studentId)
+  const studentIndex = rooms[roomIndex].participants.findIndex((p: any) => p.id === studentId)
   if (studentIndex === -1) return false
 
   // Update student status to invited
@@ -195,7 +196,7 @@ export async function acceptGameInvitation(roomId: string, studentId: string): P
 
   if (roomIndex === -1) return false
 
-  const studentIndex = rooms[roomIndex].participants.findIndex((p) => p.id === studentId)
+  const studentIndex = rooms[roomIndex].participants.findIndex((p: any) => p.id === studentId)
   if (studentIndex === -1) return false
 
   // Update student status to playing
@@ -211,8 +212,8 @@ export async function startLessonGame(roomId: string, whitePlayerId: string, bla
 
   if (roomIndex === -1) return false
 
-  const whitePlayer = rooms[roomIndex].participants.find((p) => p.id === whitePlayerId)
-  const blackPlayer = rooms[roomIndex].participants.find((p) => p.id === blackPlayerId)
+  const whitePlayer = rooms[roomIndex].participants.find((p: any) => p.id === whitePlayerId)
+  const blackPlayer = rooms[roomIndex].participants.find((p: any) => p.id === blackPlayerId)
 
   if (!whitePlayer || !blackPlayer) return false
 
@@ -223,8 +224,8 @@ export async function startLessonGame(roomId: string, whitePlayerId: string, bla
     whitePlayerName: whitePlayer.name,
     blackPlayerName: blackPlayer.name,
     status: "active",
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   }
 
   rooms[roomIndex].currentGame = newGame
@@ -240,7 +241,7 @@ export async function endLessonGame(roomId: string): Promise<boolean> {
   if (roomIndex === -1) return false
 
   // Reset all participants to spectating
-  rooms[roomIndex].participants.forEach((p) => {
+  rooms[roomIndex].participants.forEach((p: any) => {
     p.status = "spectating"
   })
 
@@ -255,7 +256,7 @@ export async function getUserLessonRooms(userId: string): Promise<LessonRoom[]> 
   const rooms = JSON.parse(localStorage.getItem("lesson_rooms") || "[]")
 
   return rooms.filter(
-    (room: LessonRoom) => room.teacher_id === userId || room.participants.some((p) => p.id === userId),
+    (room: LessonRoom) => room.teacherId === userId || room.participants.some((p) => p.id === userId),
   )
 }
 
@@ -263,13 +264,13 @@ export async function getUserRooms(userId: string): Promise<GameRoom[]> {
   const rooms = JSON.parse(localStorage.getItem("game_rooms") || "[]")
 
   return rooms.filter(
-    (room: GameRoom) => room.teacher_id === userId || room.participants.some((p: any) => p.id === userId),
+    (room: GameRoom) => room.teacherId === userId || room.participants.some((p: any) => p.id === userId),
   )
 }
 
 export async function deleteLessonRoom(roomId: string, teacherId: string): Promise<boolean> {
   const rooms = JSON.parse(localStorage.getItem("lesson_rooms") || "[]")
-  const filteredRooms = rooms.filter((room: LessonRoom) => !(room.id === roomId && room.teacher_id === teacherId))
+  const filteredRooms = rooms.filter((room: LessonRoom) => !(room.id === roomId && room.teacherId === teacherId))
 
   localStorage.setItem("lesson_rooms", JSON.stringify(filteredRooms))
   return true
@@ -277,7 +278,7 @@ export async function deleteLessonRoom(roomId: string, teacherId: string): Promi
 
 export async function deleteRoom(roomId: string, teacherId: string): Promise<boolean> {
   const rooms = JSON.parse(localStorage.getItem("game_rooms") || "[]")
-  const filteredRooms = rooms.filter((room: GameRoom) => !(room.id === roomId && room.teacher_id === teacherId))
+  const filteredRooms = rooms.filter((room: GameRoom) => !(room.id === roomId && room.teacherId === teacherId))
 
   localStorage.setItem("game_rooms", JSON.stringify(filteredRooms))
   return true
@@ -292,7 +293,7 @@ export async function updateLessonRoom(roomId: string, updates: Partial<LessonRo
   rooms[roomIndex] = {
     ...rooms[roomIndex],
     ...updates,
-    updated_at: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   }
 
   localStorage.setItem("lesson_rooms", JSON.stringify(rooms))
@@ -308,7 +309,7 @@ export async function updateRoom(roomId: string, updates: Partial<GameRoom>): Pr
   rooms[roomIndex] = {
     ...rooms[roomIndex],
     ...updates,
-    updated_at: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   }
 
   localStorage.setItem("game_rooms", JSON.stringify(rooms))

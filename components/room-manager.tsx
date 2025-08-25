@@ -125,13 +125,13 @@ export default function RoomManager({ user, onJoinRoom, onLogout, onUpdateUser }
 
       // Check if room is at capacity
       const currentParticipants = (room.participants?.length || 0) + 1 // +1 for teacher
-      if (currentParticipants >= (room.max_participants || 10)) {
+      if (currentParticipants >= (room.maxParticipants || 10)) {
         setError("This room is at full capacity (10 participants maximum).")
         return
       }
 
       // Check if user is already in the room
-      const isAlreadyParticipant = room.participants?.some((p) => p.id === user.id) || room.teacher_id === user.id
+      const isAlreadyParticipant = room.participants?.some((p) => p.id === user.id) || room.teacherId === user.id
 
       if (!isAlreadyParticipant) {
         if (isLessonRoom) {
@@ -476,23 +476,23 @@ export default function RoomManager({ user, onJoinRoom, onLogout, onUpdateUser }
                           <div className="flex items-center gap-3">
                             <h3 className="font-medium text-amber-900">{room.name}</h3>
                             <Badge
-                              variant={room.teacher_id === user.id ? "default" : "secondary"}
+                              variant={room.teacherId === user.id ? "default" : "secondary"}
                               className="bg-amber-800 text-amber-50"
                             >
-                              {room.teacher_id === user.id ? "Teacher" : "Student"}
+                              {room.teacherId === user.id ? "Teacher" : "Student"}
                             </Badge>
                           </div>
                           <div className="flex items-center gap-2">
                             <Badge
                               variant="outline"
-                              className={`text-xs border-amber-800 ${
-                                ((room.participants?.length || 0) + 1) >= (room.max_participants || 10)
+                              className={`text-xs border-amber-800                               ${
+                                ((room.participants?.length || 0) + 1) >= (room.maxParticipants || 10)
                                   ? "text-red-600 border-red-600"
                                   : "text-amber-800"
                               }`}
                             >
                               <Users className="w-3 h-3 mr-1" />
-                              {(room.participants?.length || 0) + 1}/{room.max_participants || 10}
+                              {(room.participants?.length || 0) + 1}/{room.maxParticipants || 10}
                             </Badge>
                           </div>
                         </div>
@@ -501,11 +501,11 @@ export default function RoomManager({ user, onJoinRoom, onLogout, onUpdateUser }
                           {/* Teacher Info */}
                           <div className="flex items-center gap-2">
                             <Avatar className="w-6 h-6">
-                              <AvatarFallback className="text-xs">{getInitials(room.teacher_name)}</AvatarFallback>
+                              <AvatarFallback className="text-xs">{getInitials(room.teacherName)}</AvatarFallback>
                             </Avatar>
                             <span className="text-sm text-amber-700">
                               <Crown className="w-3 h-3 inline mr-1" />
-                              {room.teacher_name}
+                              {room.teacherName}
                             </span>
                           </div>
 
@@ -514,15 +514,15 @@ export default function RoomManager({ user, onJoinRoom, onLogout, onUpdateUser }
                             <div className="space-y-2">
                               <div className="text-sm font-medium text-amber-800">Students:</div>
                               <div className="flex flex-wrap gap-2">
-                                {room.participants.map((participant) => (
+                                {room.participants.map((participant: any) => (
                                   <div
                                     key={participant.id}
                                     className="flex items-center gap-2 bg-amber-100 rounded-full px-3 py-1"
                                   >
                                     <Avatar className="w-5 h-5">
-                                      {participant.avatar_url ? (
+                                      {participant.avatarUrl ? (
                                         <AvatarImage
-                                          src={participant.avatar_url || "/placeholder.svg"}
+                                          src={participant.avatarUrl || "/placeholder.svg"}
                                           alt={participant.name}
                                         />
                                       ) : (
@@ -532,7 +532,7 @@ export default function RoomManager({ user, onJoinRoom, onLogout, onUpdateUser }
                                       )}
                                     </Avatar>
                                     <span className="text-sm">{participant.name}</span>
-                                    {room.teacher_id === user.id && (
+                                    {room.teacherId === user.id && (
                                       <Button
                                         variant="ghost"
                                         size="sm"
@@ -549,23 +549,23 @@ export default function RoomManager({ user, onJoinRoom, onLogout, onUpdateUser }
                             </div>
                           )}
 
-                          {room.teacher_id === user.id && (
+                          {room.teacherId === user.id && (
                             <div className="space-y-2">
                               <div className="flex items-center gap-2 p-2 bg-amber-50 rounded">
                                 <span className="text-sm text-amber-700">Invite Code:</span>
                                 <code className="bg-white px-2 py-1 rounded text-sm font-mono border">
-                                  {room.invite_code}
+                                  {room.inviteCode}
                                 </code>
-                                <Button variant="ghost" size="sm" onClick={() => copyInviteCode(room.invite_code)}>
+                                <Button variant="ghost" size="sm" onClick={() => copyInviteCode(room.inviteCode)}>
                                   <Copy className="w-4 h-4" />
                                 </Button>
                               </div>
                               <div className="flex items-center gap-2 p-2 bg-amber-50 rounded">
                                 <span className="text-sm text-amber-700">Room Link:</span>
                                 <code className="bg-white px-2 py-1 rounded text-xs font-mono border flex-1 truncate">
-                                  {room.unique_link}
+                                  {room.uniqueLink}
                                 </code>
-                                <Button variant="ghost" size="sm" onClick={() => copyRoomLink(room.unique_link || "")}>
+                                <Button variant="ghost" size="sm" onClick={() => copyRoomLink(room.uniqueLink || "")}>
                                   <Link className="w-4 h-4" />
                                 </Button>
                               </div>
@@ -581,7 +581,7 @@ export default function RoomManager({ user, onJoinRoom, onLogout, onUpdateUser }
                             >
                               Enter Room
                             </Button>
-                            {room.teacher_id === user.id && (
+                            {room.teacherId === user.id && (
                               <Button
                                 variant="outline"
                                 size="sm"
@@ -607,10 +607,10 @@ export default function RoomManager({ user, onJoinRoom, onLogout, onUpdateUser }
                           <div className="flex items-center gap-3">
                             <h3 className="font-medium text-green-900">{room.name}</h3>
                             <Badge
-                              variant={room.teacher_id === user.id ? "default" : "secondary"}
+                              variant={room.teacherId === user.id ? "default" : "secondary"}
                               className="bg-green-800 text-green-50"
                             >
-                              {room.teacher_id === user.id ? "Teacher" : "Student"}
+                              {room.teacherId === user.id ? "Teacher" : "Student"}
                             </Badge>
                             <Badge variant="outline" className="border-green-600 text-green-600">
                               Lesson Room
@@ -620,13 +620,13 @@ export default function RoomManager({ user, onJoinRoom, onLogout, onUpdateUser }
                             <Badge
                               variant="outline"
                               className={`text-xs border-green-600 ${
-                                room.participants.length >= room.max_participants
+                                room.participants.length >= room.maxParticipants
                                   ? "text-red-600 border-red-600"
                                   : "text-green-600"
                               }`}
                             >
                               <Users className="w-3 h-3 mr-1" />
-                              {room.participants.length}/{room.max_participants}
+                              {room.participants.length}/{room.maxParticipants}
                             </Badge>
                           </div>
                         </div>
@@ -635,11 +635,11 @@ export default function RoomManager({ user, onJoinRoom, onLogout, onUpdateUser }
                           {/* Teacher Info */}
                           <div className="flex items-center gap-2">
                             <Avatar className="w-6 h-6">
-                              <AvatarFallback className="text-xs">{getInitials(room.teacher_name)}</AvatarFallback>
+                              <AvatarFallback className="text-xs">{getInitials(room.teacherName)}</AvatarFallback>
                             </Avatar>
                             <span className="text-sm text-green-700">
                               <Crown className="w-3 h-3 inline mr-1" />
-                              {room.teacher_name}
+                              {room.teacherName}
                             </span>
                           </div>
 
@@ -648,15 +648,15 @@ export default function RoomManager({ user, onJoinRoom, onLogout, onUpdateUser }
                             <div className="space-y-2">
                               <div className="text-sm font-medium text-green-800">Students:</div>
                               <div className="flex flex-wrap gap-2">
-                                {room.participants.map((participant) => (
+                                {room.participants.map((participant: any) => (
                                   <div
                                     key={participant.id}
                                     className="flex items-center gap-2 bg-green-100 rounded-full px-3 py-1"
                                   >
                                     <Avatar className="w-5 h-5">
-                                      {participant.avatar_url ? (
+                                      {participant.avatarUrl ? (
                                         <AvatarImage
-                                          src={participant.avatar_url || "/placeholder.svg"}
+                                          src={participant.avatarUrl || "/placeholder.svg"}
                                           alt={participant.name}
                                         />
                                       ) : (
@@ -677,23 +677,23 @@ export default function RoomManager({ user, onJoinRoom, onLogout, onUpdateUser }
                             </div>
                           )}
 
-                          {room.teacher_id === user.id && (
+                          {room.teacherId === user.id && (
                             <div className="space-y-2">
                               <div className="flex items-center gap-2 p-2 bg-green-50 rounded">
                                 <span className="text-sm text-green-700">Invite Code:</span>
                                 <code className="bg-white px-2 py-1 rounded text-sm font-mono border">
-                                  {room.invite_code}
+                                  {room.inviteCode}
                                 </code>
-                                <Button variant="ghost" size="sm" onClick={() => copyInviteCode(room.invite_code)}>
+                                <Button variant="ghost" size="sm" onClick={() => copyInviteCode(room.inviteCode)}>
                                   <Copy className="w-4 h-4" />
                                 </Button>
                               </div>
                               <div className="flex items-center gap-2 p-2 bg-green-50 rounded">
                                 <span className="text-sm text-green-700">Room Link:</span>
                                 <code className="bg-white px-2 py-1 rounded text-xs font-mono border flex-1 truncate">
-                                  {room.unique_link}
+                                  {room.uniqueLink}
                                 </code>
-                                <Button variant="ghost" size="sm" onClick={() => copyRoomLink(room.unique_link || "")}>
+                                <Button variant="ghost" size="sm" onClick={() => copyRoomLink(room.uniqueLink || "")}>
                                   <Link className="w-4 h-4" />
                                 </Button>
                               </div>
@@ -709,7 +709,7 @@ export default function RoomManager({ user, onJoinRoom, onLogout, onUpdateUser }
                             >
                               Enter Lesson Room
                             </Button>
-                            {room.teacher_id === user.id && (
+                            {room.teacherId === user.id && (
                               <Button
                                 variant="outline"
                                 size="sm"

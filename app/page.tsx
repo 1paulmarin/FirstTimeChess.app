@@ -11,6 +11,7 @@ export interface User {
   name: string
   email: string
   role: "teacher" | "student"
+  avatarUrl?: string
 }
 
 export interface GameRoom {
@@ -23,7 +24,9 @@ export interface GameRoom {
   maxParticipants?: number
   selectedPlayerId?: string | null
   participants: User[]
-  isLessonMode?: boolean
+  isLessonMode: boolean
+  createdAt: string
+  updatedAt: string
 }
 
 export default function Home() {
@@ -64,6 +67,11 @@ export default function Home() {
     localStorage.removeItem("currentRoom")
   }
 
+  const handleUpdateUser = (updatedUser: User) => {
+    setUser(updatedUser)
+    localStorage.setItem("user", JSON.stringify(updatedUser))
+  }
+
   useEffect(() => {
     if (user && !currentRoom) {
       const savedRoom = localStorage.getItem("currentRoom")
@@ -90,16 +98,18 @@ export default function Home() {
   if (!currentRoom) {
     return (
       <main className="min-h-screen bg-orange-100">
-        <RoomManager user={user} onJoinRoom={handleJoinRoom} onLogout={handleLogout} />
+        <RoomManager user={user} onJoinRoom={handleJoinRoom} onLogout={handleLogout} onUpdateUser={handleUpdateUser} />
       </main>
     )
   }
 
   // Check if this is a lesson room
   if (currentRoom.isLessonMode) {
+    // Convert GameRoom to LessonRoom for lesson room component
+    const lessonRoom = currentRoom as any // Type assertion for compatibility
     return (
       <main className="min-h-screen bg-orange-100">
-        <LessonRoom room={currentRoom} user={user} onLeaveRoom={handleLeaveRoom} onLogout={handleLogout} />
+        <LessonRoom room={lessonRoom} user={user} onLeaveRoom={handleLeaveRoom} onLogout={handleLogout} />
       </main>
     )
   }
