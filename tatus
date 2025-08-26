@@ -1,0 +1,5 @@
+[33mc40c0a8[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Force fresh deployment: All layout fixes, fixed board sizing, control panel positioning, and syntax fixes included
+[33m1c69edc[m Fix board layout: fixed size container, proper wrapping, control panel positioning, and syntax fixes
+[33m947c844[m Force Vercel to build from latest commit - fix deployment issue
+[33md04d449[m Force redeploy: Control panel layout and board sizing optimizations
+[33ma191448[m Move control panel to right side of board for better layout and visibility

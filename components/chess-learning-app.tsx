@@ -500,8 +500,9 @@ const TRANSLATIONS = {
 type Language = keyof typeof TRANSLATIONS
 
 export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: { user: any; room: any; onLeaveRoom: () => void; onLogout: () => void }) {
-  // FORCE VERCEL DEPLOYMENT: Latest commit 1c69edc - Fixed board layout, proper wrapping, control panel positioning, syntax fixes complete
+  // FORCE VERCEL DEPLOYMENT: Latest commit c40c0a8 - Clear cache and rebuild with all layout fixes
   // All TypeScript errors fixed, strict checking enabled, no routing issues
+  // UPDATED: Fixed board layout, control panel positioning, proper wrapping, syntax fixes complete
   const [board, setBoard] = useState<Square[][]>(createInitialBoard)
   const [selectedSquare, setSelectedSquare] = useState<[number, number] | null>(null)
   const [selectedPieceType, setSelectedPieceType] = useState<Square | null>(null)
@@ -911,7 +912,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
   }
 
   return (
-    <div className="min-h-screen bg-orange-100">
+    <div className="min-h-screen bg-orange-100" data-version="0.1.2">
       {/* Header with Navigation */}
       <div className="bg-amber-50 border-b-2 border-amber-800 p-4 shadow-lg">
         <div className="max-w-7xl mx-auto">
