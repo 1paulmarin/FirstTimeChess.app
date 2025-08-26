@@ -500,7 +500,7 @@ const TRANSLATIONS = {
 type Language = keyof typeof TRANSLATIONS
 
 export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: { user: any; room: any; onLeaveRoom: () => void; onLogout: () => void }) {
-  // FORCE VERCEL DEPLOYMENT: Latest commit b9d2da5 - Fixed board layout, control panel positioning, proper wrapping, syntax fixes complete - VERSION 0.1.4
+  // FORCE VERCEL DEPLOYMENT: Latest commit - Fixed logo aspect ratio, repositioned clocks to sides of board, improved responsive layout for mobile/desktop - VERSION 0.1.5
   const [board, setBoard] = useState<Square[][]>(createInitialBoard)
   const [selectedSquare, setSelectedSquare] = useState<[number, number] | null>(null)
   const [selectedPieceType, setSelectedPieceType] = useState<Square | null>(null)
@@ -916,7 +916,12 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 sm:gap-4">
-              <img src="/images/first-time-chess-logo-app.svg" alt="First Time Chess app" className="h-8 sm:h-10 md:h-12 w-auto" />
+              <img 
+                src="/images/first-time-chess-logo-app.svg" 
+                alt="First Time Chess app" 
+                className="h-8 sm:h-10 md:h-12 w-auto object-contain" 
+                style={{ aspectRatio: 'auto' }}
+              />
               <div className="h-6 sm:h-8 w-px bg-amber-800 hidden sm:block"></div>
               <div className="hidden sm:block">
                 <h1 className="text-lg sm:text-xl font-bold text-amber-900">Chess Game</h1>
@@ -999,36 +1004,52 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
                     </SelectContent>
                   </Select>
                 </div>
-                
-                {/* Time Control Display */}
-                <div className="flex justify-between items-center bg-gray-100 p-2 sm:p-3 rounded-lg">
-                  <div className="text-center">
+              </div>
+
+              {/* Board with Side Clocks - Desktop Layout */}
+              <div className="hidden lg:flex items-center gap-4 w-full max-w-2xl">
+                {/* Left Clock */}
+                <div className="flex flex-col items-center bg-gray-100 p-3 rounded-lg min-w-[120px]">
+                  <div className="text-sm font-semibold text-gray-700">{TRANSLATIONS[language].whiteTime}</div>
+                  <div className={`text-xl font-bold ${whiteTime <= 30 ? 'text-red-600' : 'text-gray-900'}`}>
+                    {formatTime(whiteTime)}
+                  </div>
+                </div>
+
+                {/* Board Container */}
+                <div className="w-full max-w-[400px] aspect-square border-4 border-gray-800 bg-gray-900 p-3 rounded-lg shadow-2xl overflow-hidden">
+                  <div className="w-full h-full grid grid-cols-8 grid-rows-8">{renderBoard()}</div>
+                </div>
+
+                {/* Right Clock */}
+                <div className="flex flex-col items-center bg-gray-100 p-3 rounded-lg min-w-[120px]">
+                  <div className="text-sm font-semibold text-gray-700">{TRANSLATIONS[language].blackTime}</div>
+                  <div className={`text-xl font-bold ${blackTime <= 30 ? 'text-red-600' : 'text-gray-900'}`}>
+                    {formatTime(blackTime)}
+                  </div>
+                </div>
+              </div>
+
+              {/* Board with Top/Bottom Clocks - Mobile Layout */}
+              <div className="lg:hidden w-full max-w-[280px] sm:max-w-[320px] md:max-w-[360px]">
+                {/* Top Clock */}
+                <div className="flex justify-center mb-3">
+                  <div className="flex flex-col items-center bg-gray-100 p-2 sm:p-3 rounded-lg min-w-[100px]">
                     <div className="text-xs sm:text-sm font-semibold text-gray-700">{TRANSLATIONS[language].whiteTime}</div>
                     <div className={`text-sm sm:text-lg font-bold ${whiteTime <= 30 ? 'text-red-600' : 'text-gray-900'}`}>
                       {formatTime(whiteTime)}
                     </div>
                   </div>
-                  
-                  <div className="flex gap-1 sm:gap-2">
-                    {!hasGameStarted ? (
-                      <Button onClick={startTimer} size="sm" className="bg-green-600 hover:bg-green-700 text-xs sm:text-sm px-2 sm:px-3">
-                        {TRANSLATIONS[language].startGame}
-                      </Button>
-                    ) : isTimerPaused ? (
-                      <Button onClick={resumeTimer} size="sm" className="bg-green-600 hover:bg-green-700 text-xs sm:text-sm px-2 sm:px-3">
-                        {TRANSLATIONS[language].resumeGame}
-                      </Button>
-                    ) : (
-                      <Button onClick={pauseTimer} size="sm" className="bg-yellow-600 hover:bg-yellow-700 text-xs sm:text-sm px-2 sm:px-3">
-                        {TRANSLATIONS[language].pauseGame}
-                      </Button>
-                    )}
-                    <Button onClick={resetTimer} size="sm" variant="outline" className="text-xs sm:text-sm px-2 sm:px-3">
-                      {TRANSLATIONS[language].resetTimer}
-                    </Button>
-                  </div>
-                  
-                  <div className="text-center">
+                </div>
+
+                {/* Board Container */}
+                <div className="w-full aspect-square border-2 sm:border-4 border-gray-800 bg-gray-900 p-1 sm:p-2 md:p-3 rounded-lg shadow-2xl overflow-hidden">
+                  <div className="w-full h-full grid grid-cols-8 grid-rows-8">{renderBoard()}</div>
+                </div>
+
+                {/* Bottom Clock */}
+                <div className="flex justify-center mt-3">
+                  <div className="flex flex-col items-center bg-gray-100 p-2 sm:p-3 rounded-lg min-w-[100px]">
                     <div className="text-xs sm:text-sm font-semibold text-gray-700">{TRANSLATIONS[language].blackTime}</div>
                     <div className={`text-sm sm:text-lg font-bold ${blackTime <= 30 ? 'text-red-600' : 'text-gray-900'}`}>
                       {formatTime(blackTime)}
@@ -1037,9 +1058,24 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
                 </div>
               </div>
 
-              {/* Fixed Size Board Container */}
-              <div className="w-full max-w-[280px] sm:max-w-[320px] md:max-w-[360px] lg:max-w-[400px] xl:max-w-[440px] aspect-square mx-auto border-2 sm:border-4 border-gray-800 bg-gray-900 p-1 sm:p-2 md:p-3 rounded-lg shadow-2xl overflow-hidden">
-                <div className="w-full h-full grid grid-cols-8 grid-rows-8">{renderBoard()}</div>
+              {/* Timer Controls - Below Board */}
+              <div className="mt-4 flex justify-center gap-2">
+                {!hasGameStarted ? (
+                  <Button onClick={startTimer} size="sm" className="bg-green-600 hover:bg-green-700 text-xs sm:text-sm px-3 sm:px-4">
+                    {TRANSLATIONS[language].startGame}
+                  </Button>
+                ) : isTimerPaused ? (
+                  <Button onClick={resumeTimer} size="sm" className="bg-green-600 hover:bg-green-700 text-xs sm:text-sm px-3 sm:px-4">
+                    {TRANSLATIONS[language].resumeGame}
+                  </Button>
+                ) : (
+                  <Button onClick={pauseTimer} size="sm" className="bg-yellow-600 hover:bg-yellow-700 text-xs sm:text-sm px-3 sm:px-4">
+                    {TRANSLATIONS[language].pauseGame}
+                  </Button>
+                )}
+                <Button onClick={resetTimer} size="sm" variant="outline" className="text-xs sm:text-sm px-3 sm:px-4">
+                  {TRANSLATIONS[language].resetTimer}
+                </Button>
               </div>
 
             {promotionDialog && (
