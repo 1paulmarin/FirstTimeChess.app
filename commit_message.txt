@@ -1,0 +1,7 @@
+Force Vercel deployment with latest fixes - VERSION 0.1.6
+
+- Fixed JSX syntax errors
+- Improved logo aspect ratio
+- Repositioned clocks to board sides
+- Enhanced responsive layout for mobile/desktop
+- All build errors resolved

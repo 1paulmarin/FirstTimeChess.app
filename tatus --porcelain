@@ -1,0 +1,5 @@
+[33ma483646[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Fix JSX syntax errors and complete layout improvements - VERSION 0.1.5
+[33mb8050e9[m Fix layout issues: logo aspect ratio, reposition clocks to board sides, improve responsive design - VERSION 0.1.5
+[33m36be24b[m Force Vercel to build latest commit - version 0.1.4 with all layout fixes
+[33mb9d2da5[m Force Vercel to build latest commit
+[33mc40c0a8[m Force fresh deployment: All layout fixes, fixed board sizing, control panel positioning, and syntax fixes included

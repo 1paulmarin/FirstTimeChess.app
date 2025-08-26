@@ -16,32 +16,17 @@ const PIECE_SYMBOLS = {
 
 const BOARD_THEMES = {
   Classic: { light: "bg-amber-100", dark: "bg-amber-800", border: "border-amber-900" },
-  Modern: { light: "bg-gray-100", dark: "bg-gray-600", border: "border-gray-700" },
-  "Pink Girly": { light: "bg-pink-50", dark: "bg-pink-400", border: "border-pink-500" },
-  "Classic Wooden": {
+  Wood: {
     light: "bg-gradient-to-br from-amber-50 to-amber-100",
     dark: "bg-gradient-to-br from-amber-700 to-amber-800",
     border: "border-amber-900",
   },
-  "Blue & Gold": {
+  Pink: { light: "bg-pink-50", dark: "bg-pink-400", border: "border-pink-500" },
+  Modern: { light: "bg-gray-100", dark: "bg-gray-600", border: "border-gray-700" },
+  Blue: {
     light: "bg-gray-900 border border-cyan-400",
     dark: "bg-black border border-cyan-500 shadow-lg shadow-cyan-500/50",
     border: "border-cyan-400",
-  },
-  "Nature Green": {
-    light: "bg-gradient-to-br from-green-100 to-green-200",
-    dark: "bg-gradient-to-br from-green-700 to-green-800",
-    border: "border-green-900",
-  },
-  "Sci-Fi Neon": {
-    light: "bg-gray-900 border border-cyan-400",
-    dark: "bg-black border border-cyan-500 shadow-lg shadow-cyan-500/50",
-    border: "border-cyan-400",
-  },
-  "Modern Minimal": {
-    light: "bg-gray-50",
-    dark: "bg-gray-400",
-    border: "border-gray-500",
   },
 }
 
@@ -339,6 +324,7 @@ const playMoveSound = () => {
   const audioContext = createAudioContext()
   if (!audioContext) return
 
+  // Chess.com-like move sound - crisp click
   const oscillator = audioContext.createOscillator()
   const gainNode = audioContext.createGain()
   const filter = audioContext.createBiquadFilter()
@@ -347,23 +333,25 @@ const playMoveSound = () => {
   filter.connect(gainNode)
   gainNode.connect(audioContext.destination)
 
-  oscillator.frequency.setValueAtTime(120, audioContext.currentTime)
-  oscillator.frequency.exponentialRampToValueAtTime(80, audioContext.currentTime + 0.15)
+  oscillator.type = "sine"
+  oscillator.frequency.setValueAtTime(800, audioContext.currentTime)
+  oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.1)
 
   filter.type = "lowpass"
-  filter.frequency.setValueAtTime(800, audioContext.currentTime)
+  filter.frequency.setValueAtTime(1200, audioContext.currentTime)
 
-  gainNode.gain.setValueAtTime(0.3, audioContext.currentTime)
-  gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2)
+  gainNode.gain.setValueAtTime(0.4, audioContext.currentTime)
+  gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1)
 
   oscillator.start(audioContext.currentTime)
-  oscillator.stop(audioContext.currentTime + 0.2)
+  oscillator.stop(audioContext.currentTime + 0.1)
 }
 
 const playCheckSound = () => {
   const audioContext = createAudioContext()
   if (!audioContext) return
 
+  // Chess.com-like check sound - alerting tone
   const oscillator = audioContext.createOscillator()
   const gainNode = audioContext.createGain()
   const filter = audioContext.createBiquadFilter()
@@ -372,18 +360,18 @@ const playCheckSound = () => {
   filter.connect(gainNode)
   gainNode.connect(audioContext.destination)
 
-  oscillator.type = "triangle"
-  oscillator.frequency.setValueAtTime(600, audioContext.currentTime)
-  oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.3)
+  oscillator.type = "square"
+  oscillator.frequency.setValueAtTime(400, audioContext.currentTime)
+  oscillator.frequency.exponentialRampToValueAtTime(300, audioContext.currentTime + 0.2)
 
   filter.type = "bandpass"
-  filter.frequency.setValueAtTime(800, audioContext.currentTime)
+  filter.frequency.setValueAtTime(600, audioContext.currentTime)
 
-  gainNode.gain.setValueAtTime(0.8, audioContext.currentTime) // Much louder
-  gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3)
+  gainNode.gain.setValueAtTime(0.6, audioContext.currentTime)
+  gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2)
 
   oscillator.start(audioContext.currentTime)
-  oscillator.stop(audioContext.currentTime + 0.3)
+  oscillator.stop(audioContext.currentTime + 0.2)
 }
 
 const playCheckmateSound = () => {
@@ -500,7 +488,7 @@ const TRANSLATIONS = {
 type Language = keyof typeof TRANSLATIONS
 
 export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: { user: any; room: any; onLeaveRoom: () => void; onLogout: () => void }) {
-  // FORCE VERCEL DEPLOYMENT: Latest commit - Fixed logo aspect ratio, repositioned clocks to sides of board, improved responsive layout for mobile/desktop - VERSION 0.1.5
+  // FORCE VERCEL DEPLOYMENT: Latest commit a483646 - Fixed logo aspect ratio, repositioned clocks to sides of board, improved responsive layout for mobile/desktop - VERSION 0.1.5
   const [board, setBoard] = useState<Square[][]>(createInitialBoard)
   const [selectedSquare, setSelectedSquare] = useState<[number, number] | null>(null)
   const [selectedPieceType, setSelectedPieceType] = useState<Square | null>(null)
@@ -873,7 +861,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
         <div key={`${row}-${col}`} className={squareClass} onClick={() => handleSquareClick(row, col)}>
           {piece && (
             <span
-              className={`text-[min(4.5vw,1.2rem)] sm:text-[min(3.5vw,1.6rem)] md:text-[min(2.8vw,2rem)] lg:text-[min(2.2vw,2.4rem)] xl:text-[min(1.8vw,2.6rem)] select-none font-bold ${
+              className={`text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl select-none font-bold ${
                 piece.color === "white"
                   ? "text-white drop-shadow-[0_0_2px_rgba(0,0,0,1)]"
                   : "text-black drop-shadow-[0_0_2px_rgba(255,255,255,0.8)]"
@@ -912,45 +900,42 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
   return (
     <div className="min-h-screen bg-orange-100">
       {/* Header with Navigation */}
-      <div className="bg-amber-50 border-b-2 border-amber-800 p-4 shadow-lg">
+      <div className="bg-amber-50 border-b-2 border-amber-800 p-2 sm:p-4 shadow-lg">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4">
             <div className="flex items-center gap-2 sm:gap-4">
               <img 
                 src="/images/first-time-chess-logo-app.svg" 
                 alt="First Time Chess app" 
-                className="h-8 sm:h-10 md:h-12 w-auto object-contain" 
-                style={{ aspectRatio: 'auto' }}
+                className="h-6 sm:h-8 md:h-10 lg:h-12 w-auto object-contain" 
               />
-              <div className="h-6 sm:h-8 w-px bg-amber-800 hidden sm:block"></div>
-              <div className="hidden sm:block">
-                <h1 className="text-lg sm:text-xl font-bold text-amber-900">Chess Game</h1>
+              <div className="h-4 sm:h-6 lg:h-8 w-px bg-amber-800 hidden sm:block"></div>
+              <div className="text-center sm:text-left">
+                <h1 className="text-sm sm:text-lg lg:text-xl font-bold text-amber-900">Chess Game</h1>
                 {room && <p className="text-xs sm:text-sm text-amber-700">{room.name}</p>}
               </div>
             </div>
-            <div className="flex items-center gap-2 sm:gap-3">
-              <div className="flex items-center gap-2">
-                <Select value={language} onValueChange={(value: Language) => setLanguage(value)}>
-                  <SelectTrigger className="w-24 sm:w-32">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="en">English</SelectItem>
-                    <SelectItem value="ro">Română</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+            <div className="flex items-center gap-1 sm:gap-2 lg:gap-3 flex-wrap justify-center">
+              <Select value={language} onValueChange={(value: Language) => setLanguage(value)}>
+                <SelectTrigger className="w-20 sm:w-24 lg:w-32 text-xs sm:text-sm">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="en">English</SelectItem>
+                  <SelectItem value="ro">Română</SelectItem>
+                </SelectContent>
+              </Select>
               <Button
                 variant="outline"
                 onClick={onLeaveRoom}
-                className="border-amber-800 text-amber-800 hover:bg-amber-100 text-sm sm:text-base px-2 sm:px-4"
+                className="border-amber-800 text-amber-800 hover:bg-amber-100 text-xs sm:text-sm lg:text-base px-2 sm:px-3 lg:px-4"
               >
-                ← Back to Lobby
+                ← Back
               </Button>
               <Button
                 variant="ghost"
                 onClick={onLogout}
-                className="text-amber-800 hover:text-amber-900 hover:bg-amber-100 text-sm sm:text-base px-2 sm:px-4"
+                className="text-amber-800 hover:text-amber-900 hover:bg-amber-100 text-xs sm:text-sm lg:text-base px-2 sm:px-3 lg:px-4"
               >
                 Logout
               </Button>
@@ -959,26 +944,16 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
         </div>
       </div>
 
-      <div className="p-2 sm:p-4">
+      <div className="p-2 sm:p-4 lg:p-6">
         <div className="max-w-7xl mx-auto">
-          {/* Mobile Back to Lobby Button - Always Visible */}
-          <div className="mb-4 flex justify-center lg:hidden">
-            <Button
-              variant="outline"
-              onClick={onLeaveRoom}
-              className="border-amber-800 text-amber-800 hover:bg-amber-100 px-6 py-2"
-            >
-              ← Back to Lobby
-            </Button>
-          </div>
-          
-          <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 items-start">
-            {/* Board Section - Fixed Size Container */}
-            <div className="flex-1 flex flex-col items-center justify-center px-2 sm:px-4 min-w-0">
-              <div className="mb-4 space-y-3 sm:space-y-4 w-full max-w-md">
-                <div className="flex flex-col sm:flex-row gap-2 items-center">
+          <div className="flex flex-col xl:flex-row gap-4 sm:gap-6 items-start">
+            {/* Board Section */}
+            <div className="flex-1 flex flex-col items-center justify-center min-w-0">
+              {/* Controls Row */}
+              <div className="mb-4 w-full max-w-md">
+                <div className="flex flex-col sm:flex-row gap-2 items-center justify-center">
                   <Select value={boardTheme} onValueChange={(value: keyof typeof BOARD_THEMES) => setBoardTheme(value)}>
-                    <SelectTrigger className="w-28 sm:w-36 md:w-44 text-xs sm:text-sm">
+                    <SelectTrigger className="w-24 sm:w-32 md:w-40 text-xs sm:text-sm">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -991,7 +966,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
                   </Select>
                   
                   <Select value={timeControl.toString()} onValueChange={(value) => setTimeControl(parseInt(value))}>
-                    <SelectTrigger className="w-20 sm:w-28 text-xs sm:text-sm">
+                    <SelectTrigger className="w-16 sm:w-20 md:w-24 text-xs sm:text-sm">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -1006,35 +981,11 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
                 </div>
               </div>
 
-              {/* Board with Side Clocks - Desktop Layout */}
-              <div className="hidden lg:flex items-center gap-4 w-full max-w-2xl">
-                {/* Left Clock */}
-                <div className="flex flex-col items-center bg-gray-100 p-3 rounded-lg min-w-[120px]">
-                  <div className="text-sm font-semibold text-gray-700">{TRANSLATIONS[language].whiteTime}</div>
-                  <div className={`text-xl font-bold ${whiteTime <= 30 ? 'text-red-600' : 'text-gray-900'}`}>
-                    {formatTime(whiteTime)}
-                  </div>
-                </div>
-
-                {/* Board Container */}
-                <div className="w-full max-w-[400px] aspect-square border-4 border-gray-800 bg-gray-900 p-3 rounded-lg shadow-2xl overflow-hidden">
-                  <div className="w-full h-full grid grid-cols-8 grid-rows-8">{renderBoard()}</div>
-                </div>
-
-                {/* Right Clock */}
-                <div className="flex flex-col items-center bg-gray-100 p-3 rounded-lg min-w-[120px]">
-                  <div className="text-sm font-semibold text-gray-700">{TRANSLATIONS[language].blackTime}</div>
-                  <div className={`text-xl font-bold ${blackTime <= 30 ? 'text-red-600' : 'text-gray-900'}`}>
-                    {formatTime(blackTime)}
-                  </div>
-                </div>
-              </div>
-
-              {/* Board with Top/Bottom Clocks - Mobile Layout */}
-              <div className="lg:hidden w-full max-w-[280px] sm:max-w-[320px] md:max-w-[360px]">
-                {/* Top Clock */}
-                <div className="flex justify-center mb-3">
-                  <div className="flex flex-col items-center bg-gray-100 p-2 sm:p-3 rounded-lg min-w-[100px]">
+              {/* Board with Clocks - Responsive Layout */}
+              <div className="w-full max-w-[280px] sm:max-w-[320px] md:max-w-[360px] lg:max-w-[400px] xl:max-w-[450px]">
+                {/* Top Clock - Mobile/Tablet */}
+                <div className="flex justify-center mb-2 sm:mb-3 lg:hidden">
+                  <div className="flex flex-col items-center bg-gray-100 p-2 sm:p-3 rounded-lg min-w-[80px] sm:min-w-[100px]">
                     <div className="text-xs sm:text-sm font-semibold text-gray-700">{TRANSLATIONS[language].whiteTime}</div>
                     <div className={`text-sm sm:text-lg font-bold ${whiteTime <= 30 ? 'text-red-600' : 'text-gray-900'}`}>
                       {formatTime(whiteTime)}
@@ -1043,37 +994,54 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
                 </div>
 
                 {/* Board Container */}
-                <div className="w-full aspect-square border-2 sm:border-4 border-gray-800 bg-gray-900 p-1 sm:p-2 md:p-3 rounded-lg shadow-2xl overflow-hidden">
+                <div className="w-full aspect-square border-2 sm:border-3 lg:border-4 border-gray-800 bg-gray-900 p-1 sm:p-2 lg:p-3 rounded-lg shadow-2xl overflow-hidden">
                   <div className="w-full h-full grid grid-cols-8 grid-rows-8">{renderBoard()}</div>
                 </div>
 
-                {/* Bottom Clock */}
-                <div className="flex justify-center mt-3">
-                  <div className="flex flex-col items-center bg-gray-100 p-2 sm:p-3 rounded-lg min-w-[100px]">
+                {/* Bottom Clock - Mobile/Tablet */}
+                <div className="flex justify-center mt-2 sm:mt-3 lg:hidden">
+                  <div className="flex flex-col items-center bg-gray-100 p-2 sm:p-3 rounded-lg min-w-[80px] sm:min-w-[100px]">
                     <div className="text-xs sm:text-sm font-semibold text-gray-700">{TRANSLATIONS[language].blackTime}</div>
                     <div className={`text-sm sm:text-lg font-bold ${blackTime <= 30 ? 'text-red-600' : 'text-gray-900'}`}>
                       {formatTime(blackTime)}
                     </div>
                   </div>
                 </div>
+
+                {/* Side Clocks - Desktop */}
+                <div className="hidden lg:flex items-center gap-3 w-full max-w-[500px] mx-auto mt-4">
+                  <div className="flex flex-col items-center bg-gray-100 p-3 rounded-lg min-w-[100px]">
+                    <div className="text-sm font-semibold text-gray-700">{TRANSLATIONS[language].whiteTime}</div>
+                    <div className={`text-lg font-bold ${whiteTime <= 30 ? 'text-red-600' : 'text-gray-900'}`}>
+                      {formatTime(whiteTime)}
+                    </div>
+                  </div>
+                  <div className="flex-1"></div>
+                  <div className="flex flex-col items-center bg-gray-100 p-3 rounded-lg min-w-[100px]">
+                    <div className="text-sm font-semibold text-gray-700">{TRANSLATIONS[language].blackTime}</div>
+                    <div className={`text-lg font-bold ${blackTime <= 30 ? 'text-red-600' : 'text-gray-900'}`}>
+                      {formatTime(blackTime)}
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              {/* Timer Controls - Below Board */}
-              <div className="mt-4 flex justify-center gap-2">
+              {/* Timer Controls */}
+              <div className="mt-4 flex justify-center gap-2 flex-wrap">
                 {!hasGameStarted ? (
-                  <Button onClick={startTimer} size="sm" className="bg-green-600 hover:bg-green-700 text-xs sm:text-sm px-3 sm:px-4">
+                  <Button onClick={startTimer} size="sm" className="bg-green-600 hover:bg-green-700 text-xs sm:text-sm px-2 sm:px-3 lg:px-4">
                     {TRANSLATIONS[language].startGame}
                   </Button>
                 ) : isTimerPaused ? (
-                  <Button onClick={resumeTimer} size="sm" className="bg-green-600 hover:bg-green-700 text-xs sm:text-sm px-3 sm:px-4">
+                  <Button onClick={resumeTimer} size="sm" className="bg-green-600 hover:bg-green-700 text-xs sm:text-sm px-2 sm:px-3 lg:px-4">
                     {TRANSLATIONS[language].resumeGame}
                   </Button>
                 ) : (
-                  <Button onClick={pauseTimer} size="sm" className="bg-yellow-600 hover:bg-yellow-700 text-xs sm:text-sm px-3 sm:px-4">
+                  <Button onClick={pauseTimer} size="sm" className="bg-yellow-600 hover:bg-yellow-700 text-xs sm:text-sm px-2 sm:px-3 lg:px-4">
                     {TRANSLATIONS[language].pauseGame}
                   </Button>
                 )}
-                <Button onClick={resetTimer} size="sm" variant="outline" className="text-xs sm:text-sm px-3 sm:px-4">
+                <Button onClick={resetTimer} size="sm" variant="outline" className="text-xs sm:text-sm px-2 sm:px-3 lg:px-4">
                   {TRANSLATIONS[language].resetTimer}
                 </Button>
               </div>
@@ -1106,10 +1074,9 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
               </div>
             )}
             </div>
-          </div>
 
-          {/* Control Panel - Right Side on Desktop, Below on Mobile */}
-          <div className="lg:w-80 space-y-3 sm:space-y-4">
+            {/* Control Panel - Responsive Layout */}
+            <div className="w-full xl:w-80 space-y-3 sm:space-y-4">
             <Card className="mb-2 sm:mb-4">
               <CardHeader className="pb-2 sm:pb-4">
                 <CardTitle className="text-sm sm:text-base">{TRANSLATIONS[language].gameStatus}</CardTitle>
