@@ -117,6 +117,9 @@
                         <button onclick="flipBoard()" class="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm">
                             Flip Board
                         </button>
+                        <button onclick="goBackToLobby()" class="w-full px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 text-sm">
+                            Back to Lobby
+                        </button>
                     </div>
                 </div>
 
@@ -139,6 +142,31 @@
                     </div>
                 </div>
 
+                <!-- Theme Selection -->
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-lg font-bold mb-3 text-gray-800">Board Theme</h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="setTheme('classic')" class="px-3 py-2 bg-amber-200 text-amber-800 rounded hover:bg-amber-300 text-sm font-semibold">Classic</button>
+                        <button onclick="setTheme('wood')" class="px-3 py-2 bg-amber-100 text-amber-800 rounded hover:bg-amber-200 text-sm">Wood</button>
+                        <button onclick="setTheme('pink')" class="px-3 py-2 bg-pink-100 text-pink-800 rounded hover:bg-pink-200 text-sm">Pink</button>
+                        <button onclick="setTheme('modern')" class="px-3 py-2 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 text-sm">Modern</button>
+                        <button onclick="setTheme('blue')" class="px-3 py-2 bg-blue-100 text-blue-800 rounded hover:bg-blue-200 text-sm">Blue</button>
+                    </div>
+                </div>
+
+                <!-- Sound Controls -->
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-lg font-bold mb-3 text-gray-800">Sound</h3>
+                    <div class="space-y-2">
+                        <button onclick="toggleSound()" id="soundToggle" class="w-full px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 text-sm">
+                            Sound: ON
+                        </button>
+                        <button onclick="playMoveSound()" class="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm">
+                            Test Sound
+                        </button>
+                    </div>
+                </div>
+
             </div>
 
         </div>
@@ -155,6 +183,9 @@
                     </button>
                     <button onclick="flipBoard()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm">
                         Flip Board
+                    </button>
+                    <button onclick="goBackToLobby()" class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 text-sm">
+                        Back to Lobby
                     </button>
                 </div>
             </div>
@@ -175,6 +206,31 @@
                     <button onclick="setTimeControl(10)" class="px-3 py-1 bg-blue-200 text-blue-800 rounded hover:bg-blue-300 text-sm font-semibold">10 min</button>
                     <button onclick="setTimeControl(15)" class="px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 text-sm">15 min</button>
                     <button onclick="setTimeControl(30)" class="px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 text-sm">30 min</button>
+                </div>
+            </div>
+
+            <!-- Theme Selection - Mobile -->
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h3 class="text-lg font-bold mb-3 text-gray-800">Board Theme</h3>
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="setTheme('classic')" class="px-3 py-2 bg-amber-200 text-amber-800 rounded hover:bg-amber-300 text-sm font-semibold">Classic</button>
+                    <button onclick="setTheme('wood')" class="px-3 py-2 bg-amber-100 text-amber-800 rounded hover:bg-amber-200 text-sm">Wood</button>
+                    <button onclick="setTheme('pink')" class="px-3 py-2 bg-pink-100 text-pink-800 rounded hover:bg-pink-200 text-sm">Pink</button>
+                    <button onclick="setTheme('modern')" class="px-3 py-2 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 text-sm">Modern</button>
+                    <button onclick="setTheme('blue')" class="px-3 py-2 bg-blue-100 text-blue-800 rounded hover:bg-blue-200 text-sm">Blue</button>
+                </div>
+            </div>
+
+            <!-- Sound Controls - Mobile -->
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h3 class="text-lg font-bold mb-3 text-gray-800">Sound</h3>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="toggleSound()" id="soundToggleMobile" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 text-sm">
+                        Sound: ON
+                    </button>
+                    <button onclick="playMoveSound()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm">
+                        Test Sound
+                    </button>
                 </div>
             </div>
 
@@ -214,6 +270,20 @@
         let isTimerRunning = false;
         let timerInterval = null;
         let timeControl = 10; // default 10 minutes
+
+        // Theme variables
+        let currentTheme = 'classic';
+        const themes = {
+            classic: { light: '#fef3c7', dark: '#92400e' },
+            wood: { light: '#d4a574', dark: '#8b4513' },
+            pink: { light: '#fce7f3', dark: '#ec4899' },
+            modern: { light: '#e5e7eb', dark: '#374151' },
+            blue: { light: '#dbeafe', dark: '#1e40af' }
+        };
+
+        // Sound variables
+        let soundEnabled = true;
+        let audioContext = null;
 
         function createInitialBoard() {
             const board = Array(8).fill(null).map(() => Array(8).fill(null));
@@ -343,7 +413,7 @@
 
                     const square = document.createElement('div');
                     square.className = 'chess-square';
-                    square.style.backgroundColor = isLight ? '#fef3c7' : '#92400e';
+                    square.style.backgroundColor = isLight ? themes[currentTheme].light : themes[currentTheme].dark;
                     if (isSelected) square.style.backgroundColor = '#fbbf24';
                     
                     square.onclick = () => handleSquareClick(displayRow, displayCol);
@@ -404,6 +474,11 @@
                         validMoves = [];
                         updateGameStatus();
                         renderBoard();
+                        
+                        // Play move sound
+                        if (soundEnabled) {
+                            playMoveSound();
+                        }
                         return;
                     }
                 }
@@ -451,6 +526,11 @@
         function flipBoard() {
             isFlipped = !isFlipped;
             renderBoard();
+        }
+
+        function goBackToLobby() {
+            // This would navigate back to the lobby in a real app
+            alert('Back to Lobby clicked! In a real app, this would navigate to the lobby.');
         }
 
         function updateGameStatus() {
@@ -515,6 +595,55 @@
         function setTimeControl(minutes) {
             timeControl = minutes;
             resetTimer();
+        }
+
+        // Theme functions
+        function setTheme(theme) {
+            currentTheme = theme;
+            renderBoard();
+        }
+
+        // Sound functions
+        function initAudioContext() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playMoveSound() {
+            if (!soundEnabled) return;
+            
+            initAudioContext();
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.1);
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.1);
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const button = document.getElementById('soundToggle');
+            const buttonMobile = document.getElementById('soundToggleMobile');
+            const text = soundEnabled ? 'Sound: ON' : 'Sound: OFF';
+            const bgColor = soundEnabled ? 'bg-green-600' : 'bg-red-600';
+            const hoverColor = soundEnabled ? 'hover:bg-green-700' : 'hover:bg-red-700';
+            
+            button.textContent = text;
+            button.className = `w-full px-4 py-2 ${bgColor} text-white rounded ${hoverColor} text-sm`;
+            
+            buttonMobile.textContent = text;
+            buttonMobile.className = `px-4 py-2 ${bgColor} text-white rounded ${hoverColor} text-sm`;
         }
 
         // Initialize the game
