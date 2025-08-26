@@ -1105,6 +1105,7 @@ export default function ChessLearningApp({ user, room, onLeaveRoom, onLogout }: 
                 </Card>
               </div>
             )}
+            </div>
           </div>
 
           {/* Control Panel - Right Side on Desktop, Below on Mobile */}
