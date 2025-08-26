@@ -23,7 +23,7 @@ import {
   Settings
 } from "lucide-react"
 import type { LessonRoom, LessonParticipant, LessonGame } from "@/lib/rooms"
-import type { User } from "@/app/page"
+import type { User } from "@/types"
 import ChessLearningApp from "./chess-learning-app"
 
 interface LessonRoomProps {
@@ -248,7 +248,7 @@ export default function LessonRoom({ room, user, onLeaveRoom, onLogout }: Lesson
             </div>
           </div>
         </div>
-        <ChessLearningApp user={user} room={room} onLeaveRoom={onLeaveRoom} onLogout={onLogout} />
+        <ChessLearningApp />
       </div>
     )
   }

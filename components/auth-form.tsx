@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Mail, LogIn, UserPlus } from "lucide-react"
-import type { User } from "../app/page"
+import type { User } from "../types"
 
 interface AuthFormProps {
   onLogin: (user: User) => void
